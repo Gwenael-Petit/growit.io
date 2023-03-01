@@ -78,23 +78,23 @@ Commençons par nous intéresser à la liste :
 
 ## C. Filtrage de la liste
 
-Maintenant que vous avez récupéré les pokémons de la bdd, faites en sorte que lorsque l'utilisateur tape quelque chose dans le champ de recherche ([événement `'input'` _(mdn)_](https://developer.mozilla.org/fr/docs/Web/API/HTMLElement/input_event)), on affiche en dessous les 20 premiers pokémons (s'il y en a plus de 20, sinon on les affiche tous) dont le nom contient la chaîne recherchée :
+Maintenant que vous avez récupéré les pokémons de la bdd, faites en sorte que lorsque l'utilisateur tape quelque chose dans le champ de recherche ([événement `'input'` _(mdn)_](https://developer.mozilla.org/fr/docs/Web/API/HTMLElement/input_event)), on affiche en dessous les 20 premiers pokémons dont le nom contient la chaîne recherchée (s'il y en a moins de 20 qui correspondent, on les affiche tous) :
 
 <img src="images/readme/filtre.png" />
 
 ## D. Détail d'un Pokémon
 
-Faites en sorte maintenant que quand on clique sur un pokémon de la liste, le détail s'affiche ! Pour cela il vous faudra :
+Faites en sorte maintenant que quand on clique sur un pokémon de la liste, le détail s'affiche ! Pour cela
 
-1. ajouter la classe "active" sur le lien qui a été cliqué (et l'enlevé du précédent lien)
+1. Ajoutez la classe "active" sur le lien qui a été cliqué (_et l'enlever du précédent lien_)
 
 	<img src="images/readme/liste-active.png" />
 
-2. Afficher la progress bar du détail :
+2. Affichez la progress bar du détail :
 
 	<img src="images/readme/detail-loader.png" />
 
-3. Déclencher un appel AJAX vers l'URL du pokemon cliqué (fourni dans les résultat du premier appel AJAX). Par exemple si l'on clique sur `bulbasaur`, l'appel AJAX qu'on fera sera vers https://pokeapi.co/api/v2/pokemon/1/ .
+3. Déclenchez un appel AJAX vers l'URL du pokemon cliqué (fournie dans les résultat du premier appel AJAX). Par exemple si l'on clique sur `bulbasaur`, l'appel AJAX qu'on fera sera vers https://pokeapi.co/api/v2/pokemon/1/ .
 
 	Une fois le résultat obtenu, masquez la progress bar, affichez le détail et injectez :
 	- dans `<div class="carousel-inner"></div>`, une balise :
