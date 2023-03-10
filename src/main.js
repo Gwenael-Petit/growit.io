@@ -4,6 +4,7 @@ const canvas = document.querySelector('.gameCanvas'),
 let x = 1000,
 	y = 400;
 
+let score = 10;
 render();
 
 function render() {
@@ -13,8 +14,16 @@ function render() {
 	context.beginPath();
 	context.strokeStyle = 'blue';
 	context.fillStyle = 'blue';
-	context.arc(canvas.width / 2, canvas.height / 2, 10, 0, 2 * Math.PI, false);
+	context.arc(
+		canvas.width / 2,
+		canvas.height / 2,
+		score,
+		0,
+		2 * Math.PI,
+		false
+	);
 	context.fill();
 	context.stroke();
+	//context.translate(0, 100);
 	requestAnimationFrame(render);
 }
