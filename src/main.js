@@ -9,16 +9,23 @@ const canvas = document.querySelector('.gameCanvas'),
 const canvasResizeObserver = new ResizeObserver(() => resampleCanvas());
 canvasResizeObserver.observe(canvas);*/
 
-console.log(canvas.clientWidth);
-console.log(canvas.width);
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-let x = 50,
-	y = 50;
+let x = 1000,
+	y = 400;
+
+const image = new Image();
+image.src = '/images/logo.png';
+
+image.addEventListener('load', event => {
+	context.drawImage(image, 50, 50);
+});
 
 render();
 
 function render() {
-	context.clearRect(0, 0, canvas.width, canvas.height);
+	//context.clearRect(0, 0, canvas.width, canvas.height);
 	context.beginPath();
 	context.moveTo(x, y);
 	context.strokeStyle = 'blue';
