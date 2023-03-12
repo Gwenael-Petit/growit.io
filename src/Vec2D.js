@@ -35,7 +35,7 @@ export default class Vec2D {
         }
     }
 
-    setLength(len) {
+    setMagnitude(len) {
         this.normalize();
         this.multiply(len);
     }
