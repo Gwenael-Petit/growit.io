@@ -7,7 +7,7 @@ const socket = new io();
 const canvas = document.querySelector('.gameCanvas'),
 	context = canvas.getContext('2d');
 
-const player = new Player(0, 0, 1000);
+const player = new Player(0, 0, 10);
 
 const foods = [];
 
@@ -17,8 +17,8 @@ function setup() {
 	for (let i = 0; i < 200; i++) {
 		foods.push(
 			new Food(
-				Math.floor(Math.random() * 1000 - 500),
-				Math.floor(Math.random() * 1000 - 500),
+				Math.floor(Math.random() * 200 - 200),
+				Math.floor(Math.random() * 200 - 200),
 				1
 			)
 		);
@@ -36,7 +36,7 @@ setInterval(() => {
 	foods.forEach((food, idx) => {
 		if (player.canEatFood(food)) {
 			foods.splice(idx, 1);
-			console.log(player.score);
+			console.log(player.speed);
 		}
 	});
 	player.update();
@@ -48,13 +48,13 @@ function render() {
 	canvas.height = window.innerHeight;
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	context.translate(canvas.width / 2, canvas.height / 2);
+	const zoom = 48 / (player.size / 2);
+	context.scale(zoom, zoom);
 	context.translate(-player.pos.x, -player.pos.y);
-
-	//context.scale(5, 5);
 
 	foods.forEach(food => {
 		context.beginPath();
-		context.arc(food.pos.x, food.pos.y, food.size, 0, 2 * Math.PI, false);
+		context.arc(food.pos.x, food.pos.y, food.size / 2, 0, 2 * Math.PI, false);
 		context.fill();
 		context.stroke();
 		context.closePath();
@@ -63,7 +63,14 @@ function render() {
 	context.beginPath();
 	context.strokeStyle = 'blue';
 	context.fillStyle = 'blue';
-	context.arc(player.pos.x, player.pos.y, player.size, 0, 2 * Math.PI, false);
+	context.arc(
+		player.pos.x,
+		player.pos.y,
+		player.size / 2,
+		0,
+		2 * Math.PI,
+		false
+	);
 	context.fill();
 	context.stroke();
 

@@ -25,11 +25,12 @@ export default class Player {
 
 	updateScore() {
 		const area = Math.PI * Math.pow(this.size / 2, 2);
-		this.score = Math.floor(Math.sqrt(area));
+		this.score = Math.floor(area);
 	}
 
 	updateSpeed() {
-		this.speed = 20 / (Math.pow(this.size, 0.15) + 1000 / 60);
+		//this.speed = 10 / (Math.pow(this.size, 0.15) + 1000 / 60);
+		this.speed = 2.2 * Math.pow(this.size, -0.43);
 	}
 
 	move() {
