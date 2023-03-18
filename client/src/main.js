@@ -1,23 +1,25 @@
+import { io } from 'socket.io-client';
 import Player from './Player.js';
-import Vec2D from './Vec2D.js';
 import Food from './Food.js';
+
+const socket = new io();
 
 const canvas = document.querySelector('.gameCanvas'),
 	context = canvas.getContext('2d');
 
-const player = new Player(0, 0);
+const player = new Player(0, 0, 1000);
 
 const foods = [];
 
 setup();
 
 function setup() {
-	for (let i = 0; i < 50; i++) {
+	for (let i = 0; i < 200; i++) {
 		foods.push(
 			new Food(
 				Math.floor(Math.random() * 1000 - 500),
 				Math.floor(Math.random() * 1000 - 500),
-				3
+				1
 			)
 		);
 	}
@@ -34,8 +36,6 @@ setInterval(() => {
 	foods.forEach((food, idx) => {
 		if (player.canEatFood(food)) {
 			foods.splice(idx, 1);
-			console.log(player.diameter);
-			console.log(player.mass);
 			console.log(player.score);
 		}
 	});
@@ -50,31 +50,20 @@ function render() {
 	context.translate(canvas.width / 2, canvas.height / 2);
 	context.translate(-player.pos.x, -player.pos.y);
 
+	//context.scale(5, 5);
+
 	foods.forEach(food => {
 		context.beginPath();
-		context.arc(
-			food.pos.x,
-			food.pos.y,
-			food.getRadius(),
-			0,
-			2 * Math.PI,
-			false
-		);
+		context.arc(food.pos.x, food.pos.y, food.size, 0, 2 * Math.PI, false);
 		context.fill();
 		context.stroke();
+		context.closePath();
 	});
 
 	context.beginPath();
 	context.strokeStyle = 'blue';
 	context.fillStyle = 'blue';
-	context.arc(
-		player.pos.x,
-		player.pos.y,
-		player.diameter / 2,
-		0,
-		2 * Math.PI,
-		false
-	);
+	context.arc(player.pos.x, player.pos.y, player.size, 0, 2 * Math.PI, false);
 	context.fill();
 	context.stroke();
 
