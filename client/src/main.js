@@ -75,4 +75,32 @@ function render() {
 	context.stroke();
 
 	requestAnimationFrame(render);
+
+	/*const filterNameInput = document.getElementById('filter-name');
+        const rows = document.querySelectorAll('tbody tr');
+		const table = document.querySelector('table');
+		const rowToSort = Array.from(table.querySelectorAll('tbody tr'));
+
+		rowToSort.sort((a, b) => parseInt(b.cells[1].textContent) - parseInt(a.cells[1].textContent));
+
+		rowToSort.forEach(row => table.appendChild(row));
+        
+        filterNameInput.addEventListener('input', () => {
+            filterRows();
+        });
+        
+        
+        function filterRows() {
+            const filterName = filterNameInput.value.trim().toLowerCase();
+            
+            rows.forEach(row => {
+                const name = row.querySelector('td:first-child').textContent.trim().toLowerCase();
+                
+                if (filterName === '' || name.includes(filterName)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }*/
 }
