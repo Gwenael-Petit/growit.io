@@ -1,5 +1,5 @@
 canvas {
-    background-color: white;
+    background-color: red;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -14,7 +14,7 @@ body {
 }
 
 
-/*body {
+body {
     margin: 0;
     padding: 0;
     display: flex;
@@ -35,6 +35,8 @@ body {
     align-items: center;
     max-width: 500px;
     width: 100%;
+    position:absolute;
+    z-index: 10;
 }
 
 h1 {
@@ -106,12 +108,18 @@ button[type="submit"]:hover {
 }
 
 #score-table{
-			display: flex;
-			width: 100%;
-			max-width: 800px;
-			justify-content: center;
-			align-items: center;
-			flex-direction: column;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    display: flex;
+    width: 100%;
+    max-width: 800px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: absolute;
+    z-index: 9;
 		}
 
 table {
@@ -151,4 +159,3 @@ select {
 
 
 
-*/
