@@ -1,10 +1,8 @@
 import { io } from 'socket.io-client';
-import Player from './Player.js';
-import Food from './Food.js';
 
 const socket = new io();
 
-const canvas = document.querySelector('.gameCanvas'),
+/*const canvas = document.querySelector('.gameCanvas'),
 	context = canvas.getContext('2d');
 
 const player = new Player(0, 0, 10);
@@ -74,9 +72,9 @@ function render() {
 	context.fill();
 	context.stroke();
 
-	requestAnimationFrame(render);
+	requestAnimationFrame(render);*/
 
-	/*const filterNameInput = document.getElementById('filter-name');
+/*const filterNameInput = document.getElementById('filter-name');
         const rows = document.querySelectorAll('tbody tr');
 		const table = document.querySelector('table');
 		const rowToSort = Array.from(table.querySelectorAll('tbody tr'));
@@ -102,5 +100,5 @@ function render() {
                     row.style.display = 'none';
                 }
             });
-        }*/
-}
+        }
+}*/
