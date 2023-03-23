@@ -1,15 +1,14 @@
+import Cell from './Cell.js';
 import Vec2D from './Vec2D.js';
 
-export default class Player {
-	pos;
+export default class Player extends Cell {
 	dir = new Vec2D(0, 0);
-	size;
 	speed;
 	score;
 
-	constructor(x, y, score) {
-		this.pos = new Vec2D(x, y);
-		this.size = Math.sqrt(score / Math.PI) * 2;
+	constructor(x, y, color, score) {
+		super(x, y, color, score);
+		this.score = score;
 		this.updateSpeed();
 	}
 
@@ -24,13 +23,13 @@ export default class Player {
 	}
 
 	updateScore() {
-		const area = Math.PI * Math.pow(this.size / 2, 2);
+		const area = Math.PI * Math.pow(this.radius, 2);
 		this.score = Math.floor(area);
 	}
 
 	updateSpeed() {
 		//this.speed = 10 / (Math.pow(this.size, 0.15) + 1000 / 60);
-		this.speed = 2.2 * Math.pow(this.size, -0.43);
+		this.speed = 2.2 * Math.pow(this.radius * 2, -0.43);
 	}
 
 	move() {
@@ -39,16 +38,16 @@ export default class Player {
 		this.pos.add(this.dir);
 	}
 
-	eatFood(food) {
-		const area = Math.PI * Math.pow(this.size / 2, 2);
-		const foodArea = Math.PI * Math.pow(food.size / 2, 2);
-		this.size = Math.sqrt((area + foodArea) / Math.PI) * 2;
+	eatCell(cell) {
+		const area = Math.PI * Math.pow(this.radius, 2);
+		const cellArea = Math.PI * Math.pow(cell.radius, 2);
+		this.radius = Math.sqrt((area + cellArea) / Math.PI);
 		this.updateSpeed();
 	}
 
-	canEatFood(food) {
-		if (this.pos.distance(food.pos) < this.size / 2 + food.size / 2) {
-			this.eatFood(food);
+	canEatCell(cell) {
+		if (this.pos.distance(cell.pos) < this.radius + cell.radius) {
+			this.eatCell(cell);
 			return true;
 		}
 		return false;

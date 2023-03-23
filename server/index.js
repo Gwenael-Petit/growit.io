@@ -15,9 +15,15 @@ const io = new IOServer(httpServer);
 io.on('connection', socket => {
 	console.log(`Nouvelle connexion du client ${socket.id}`);
 
+	socket.emit('connected', '');
+
+	socket.on('disconnect', reason => {});
+
 	socket.on('join', data => {});
 
 	socket.on('getLeaderboard', () => {});
+
+	socket.on('setPosition', data => {});
 });
 
 app.use(express.static('client/public'));
