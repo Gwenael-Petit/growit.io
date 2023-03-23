@@ -3,6 +3,7 @@ import express from 'express';
 import fs from 'fs';
 import addWebpackMiddleware from './addWebpackMiddleware.js';
 import { Server as IOServer } from 'socket.io';
+import Game from './Game.js';
 
 const app = express();
 
@@ -12,6 +13,8 @@ const httpServer = http.createServer(app);
 
 const io = new IOServer(httpServer);
 
+const game = new Game(4000, 4000);
+
 io.on('connection', socket => {
 	console.log(`Nouvelle connexion du client ${socket.id}`);
 
@@ -19,7 +22,9 @@ io.on('connection', socket => {
 
 	socket.on('disconnect', reason => {});
 
-	socket.on('join', data => {});
+	socket.on('join', data => {
+		game.join(socket.id);
+	});
 
 	socket.on('getLeaderboard', () => {});
 

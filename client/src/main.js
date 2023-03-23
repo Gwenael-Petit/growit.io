@@ -2,10 +2,10 @@ import { io } from 'socket.io-client';
 
 const socket = new io();
 
-/*const canvas = document.querySelector('.gameCanvas'),
+const canvas = document.querySelector('.gameCanvas'),
 	context = canvas.getContext('2d');
 
-const player = new Player(0, 0, 10);
+/*const player = new Player(0, 0, 10);
 
 const foods = [];
 

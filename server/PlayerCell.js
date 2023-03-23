@@ -1,7 +1,7 @@
 import Cell from './Cell.js';
 import Vec2D from './Vec2D.js';
 
-export default class Player extends Cell {
+export default class PlayerCell extends Cell {
 	dir = new Vec2D(0, 0);
 	speed;
 	score;

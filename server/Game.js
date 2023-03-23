@@ -1,4 +1,4 @@
-import Player from './Player.js';
+import PlayerCell from './PlayerCell.js';
 
 export default class Game {
 	players = new Map();
@@ -14,7 +14,7 @@ export default class Game {
 	join(playerId) {
 		this.players.set(
 			playerId,
-			new Player(
+			new PlayerCell(
 				Math.random() * this.width - this.width / 2,
 				Math.random() * this.height - this.height / 2,
 				10
@@ -27,6 +27,8 @@ export default class Game {
 	}
 
 	update() {
-		this.players.forEach((value, key) => value.update());
+		this.players.forEach((value, key) => {
+			value.update();
+		});
 	}
 }
