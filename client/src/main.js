@@ -36,7 +36,7 @@ function render() {
 	canvas.height = window.innerHeight;
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	context.translate(canvas.width / 2, canvas.height / 2);
-	const zoom = 32 / player.radius;
+	const zoom = 48 / (player.radius * 2);
 	context.scale(zoom, zoom);
 	context.translate(-player.pos.x, -player.pos.y);
 

@@ -44,6 +44,16 @@ export default class Game {
 	update() {
 		this.players.forEach(player => {
 			player.update();
+			this.foods.forEach((f, idx) => {
+				if (player.canEatCell(f)) {
+					this.foods.splice(idx, 1);
+				}
+			});
+			this.players.forEach(other => {
+				if (player.canEatCell(other)) {
+					this.death(other.socketId);
+				}
+			});
 		});
 	}
 

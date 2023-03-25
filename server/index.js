@@ -13,7 +13,7 @@ const httpServer = http.createServer(app);
 
 const io = new IOServer(httpServer);
 
-const game = new Game(4000, 4000);
+const game = new Game(400, 400);
 
 io.on('connection', socket => {
 	console.log(`Nouvelle connexion du client ${socket.id}`);
