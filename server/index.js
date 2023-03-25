@@ -17,18 +17,22 @@ const game = new Game(4000, 4000);
 
 io.on('connection', socket => {
 	console.log(`Nouvelle connexion du client ${socket.id}`);
+	socket.emit('allowConnection');
 
-	socket.emit('connected', '');
-
-	socket.on('disconnect', reason => {});
+	socket.on('disconnect', reason => {
+		game.death(socket.id);
+	});
 
 	socket.on('join', data => {
 		game.join(socket.id);
+		console.log(game.players);
 	});
 
 	socket.on('getLeaderboard', () => {});
 
-	socket.on('setPosition', data => {});
+	socket.on('setDirection', data => {
+		game.setDirection(data.socketId, data.x, data.y);
+	});
 });
 
 app.use(express.static('client/public'));
@@ -37,3 +41,14 @@ const port = process.env.PORT || 8000;
 httpServer.listen(port, () => {
 	console.log(`Server running at http://localhost:${port}/`);
 });
+
+setInterval(() => {
+	game.update();
+	game.players.forEach(player => {
+		io.to(player.socketId).emit('updateGame', {
+			player: player,
+			players: game.players.filter(p => p.socketId != player.socketId),
+			foods: game.foods,
+		});
+	});
+}, 1000 / 60);

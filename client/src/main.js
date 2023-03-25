@@ -5,6 +5,69 @@ const socket = new io();
 const canvas = document.querySelector('.gameCanvas'),
 	context = canvas.getContext('2d');
 
+let rendered = false;
+let inGame = false;
+
+let player,
+	players = [],
+	foods = [];
+
+function drawFood(food) {
+	context.beginPath();
+	context.fillStyle = food.color;
+	context.arc(food.pos.x, food.pos.y, food.radius, 0, 2 * Math.PI, false);
+	context.fill();
+	context.closePath();
+}
+
+function drawPlayer(p) {
+	context.beginPath();
+	context.strokeStyle = p.color;
+	context.fillStyle = p.color;
+	context.arc(p.pos.x, p.pos.y, p.radius, 0, 2 * Math.PI, false);
+	context.fill();
+	context.stroke();
+	context.closePath();
+}
+
+function render() {
+	rendered = true;
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+	context.clearRect(0, 0, canvas.width, canvas.height);
+	context.translate(canvas.width / 2, canvas.height / 2);
+	const zoom = 32 / player.radius;
+	context.scale(zoom, zoom);
+	context.translate(-player.pos.x, -player.pos.y);
+
+	foods.forEach(f => drawFood(f));
+	drawPlayer(player);
+	players.forEach(p => drawPlayer(p));
+	requestAnimationFrame(render);
+}
+
+socket.on('allowConnection', () => {
+	socket.emit('join');
+	inGame = true;
+});
+
+socket.on('updateGame', game => {
+	player = game.player;
+	players = game.players;
+	foods = game.foods;
+	if (!rendered) requestAnimationFrame(render);
+});
+
+canvas.addEventListener('mousemove', event => {
+	if (inGame) {
+		socket.emit('setDirection', {
+			socketId: socket.id,
+			x: event.clientX - canvas.width / 2,
+			y: event.clientY - canvas.height / 2,
+		});
+	}
+});
+
 /*const player = new Player(0, 0, 10);
 
 const foods = [];

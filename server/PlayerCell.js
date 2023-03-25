@@ -5,10 +5,12 @@ export default class PlayerCell extends Cell {
 	dir = new Vec2D(0, 0);
 	speed;
 	score;
+	socketId;
 
-	constructor(x, y, color, score) {
+	constructor(x, y, color, score, socketId) {
 		super(x, y, color, score);
 		this.score = score;
+		this.socketId = socketId;
 		this.updateSpeed();
 	}
 
