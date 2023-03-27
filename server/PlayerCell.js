@@ -31,10 +31,18 @@ export default class PlayerCell extends Cell {
 
 	updateSpeed() {
 		//this.speed = 10 / (Math.pow(this.size, 0.15) + 1000 / 60);
-		this.speed = 2.2 * Math.pow(this.radius * 2, -0.43);
+		this.speed = (2.2 * Math.pow(this.radius * 2, -0.43)) / 4;
 	}
 
 	move() {
+		/*const len = this.dir.length();
+		if (len <= this.radius) {
+			this.dir.normalize();
+			this.dir.multiply(1 - len);
+		} else {
+			this.dir.normalize();
+			this.dir.multiply(this.speed);
+		}*/
 		this.dir.normalize();
 		this.dir.multiply(this.speed);
 		this.pos.add(this.dir);
@@ -50,7 +58,7 @@ export default class PlayerCell extends Cell {
 	canEatCell(cell) {
 		if (
 			this.pos.distance(cell.pos) < this.radius + cell.radius &&
-			this.radius > cell.radius * 1.1
+			this.radius > cell.radius * 1.15
 		) {
 			this.eatCell(cell);
 			return true;

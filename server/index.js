@@ -13,7 +13,7 @@ const httpServer = http.createServer(app);
 
 const io = new IOServer(httpServer);
 
-const game = new Game(400, 400);
+const game = new Game(100, 100);
 
 io.on('connection', socket => {
 	console.log(`Nouvelle connexion du client ${socket.id}`);
@@ -44,11 +44,15 @@ httpServer.listen(port, () => {
 
 setInterval(() => {
 	game.update();
-	game.players.forEach(player => {
-		io.to(player.socketId).emit('updateGame', {
-			player: player,
-			players: game.players.filter(p => p.socketId != player.socketId),
+	io.emit('updateGame', {
+		players: game.players,
+		foods: game.foods,
+	});
+	/*game.players.forEach(player => {
+		const socket = io.sockets.sockets.get(player.socketId);
+		socket.emit('updateGame', {
+			players: game.players,
 			foods: game.foods,
 		});
-	});
+	});*/
 }, 1000 / 60);

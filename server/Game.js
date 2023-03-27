@@ -12,7 +12,7 @@ export default class Game {
 		this.width = width;
 		this.height = height;
 
-		for (let i = 0; i < 1000; i++) {
+		for (let i = 0; i < 10; i++) {
 			this.foods.push(
 				new FoodCell(
 					Math.random() * this.width - this.width / 2,
