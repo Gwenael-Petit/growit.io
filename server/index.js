@@ -47,11 +47,4 @@ setInterval(() => {
 		players: game.players,
 		foods: game.foods,
 	});
-	/*game.players.forEach(player => {
-		const socket = io.sockets.sockets.get(player.socketId);
-		socket.emit('updateGame', {
-			players: game.players,
-			foods: game.foods,
-		});
-	});*/
 }, 1000 / 60);

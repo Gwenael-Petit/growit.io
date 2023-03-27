@@ -44,11 +44,11 @@ export default class Game {
 	update() {
 		this.players.forEach(player => {
 			player.update();
-			for (let i = this.foods.length - 1; i >= 0; i--) {
+			/*for (let i = this.foods.length - 1; i >= 0; i--) {
 				if (player.canEatCell(this.foods[i])) {
 					this.foods.splice(i, 1);
 				}
-			}
+			}*/
 			/*this.players.forEach(other => {
 				if (player.canEatCell(other)) {
 					this.death(other.socketId);

@@ -5,7 +5,10 @@ const socket = new io();
 const canvas = document.querySelector('.gameCanvas'),
 	context = canvas.getContext('2d');
 
-let canvasWidth, canvasHeight;
+let canvasWidth,
+	canvasHeight,
+	mouseX = 0,
+	mouseY = 0;
 
 const canvasResizeObserver = new ResizeObserver(() => resampleCanvas());
 canvasResizeObserver.observe(canvas);
@@ -27,7 +30,7 @@ let player,
 
 function drawGrid() {
 	context.beginPath();
-	context.lineWidth = 2;
+	context.lineWidth = 1;
 	for (let i = 0; i < 100; i++) {}
 	context.closePath();
 }
@@ -55,8 +58,8 @@ function render() {
 	context.save();
 	if (player != undefined) {
 		context.translate(canvasWidth / 2, canvasHeight / 2);
-		const zoom = 48 / Math.sqrt(player.radius);
-		context.scale(zoom, zoom);
+		//const zoom = 48 / Math.sqrt(player.radius);
+		context.scale(20, 20);
 		context.translate(-player.pos.x, -player.pos.y);
 	}
 	foods.forEach(f => drawFood(f));
@@ -77,17 +80,24 @@ socket.on('updateGame', game => {
 	player = players.find(p => p.socketId == socket.id);
 });
 
+render();
+
 canvas.addEventListener('mousemove', event => {
 	if (inGame) {
-		socket.emit('setDirection', {
-			socketId: socket.id,
-			x: event.clientX - canvasWidth / 2,
-			y: event.clientY - canvasHeight / 2,
-		});
+		mouseX = event.clientX - canvasWidth / 2;
+		mouseY = event.clientY - canvasHeight / 2;
 	}
 });
 
-render();
+setInterval(() => {
+	if (inGame) {
+		socket.emit('setDirection', {
+			socketId: socket.id,
+			x: mouseX,
+			y: mouseY,
+		});
+	}
+}, 1000 / 30);
 
 /*const filterNameInput = document.getElementById('filter-name');
         const rows = document.querySelectorAll('tbody tr');
