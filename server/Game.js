@@ -12,7 +12,7 @@ export default class Game {
 		this.width = width;
 		this.height = height;
 
-		for (let i = 0; i < 10; i++) {
+		for (let i = 0; i < 500; i++) {
 			this.foods.push(
 				new FoodCell(
 					Math.random() * this.width - this.width / 2,
@@ -44,16 +44,16 @@ export default class Game {
 	update() {
 		this.players.forEach(player => {
 			player.update();
-			this.foods.forEach((f, idx) => {
-				if (player.canEatCell(f)) {
-					this.foods.splice(idx, 1);
+			for (let i = this.foods.length - 1; i >= 0; i--) {
+				if (player.canEatCell(this.foods[i])) {
+					this.foods.splice(i, 1);
 				}
-			});
-			this.players.forEach(other => {
+			}
+			/*this.players.forEach(other => {
 				if (player.canEatCell(other)) {
 					this.death(other.socketId);
 				}
-			});
+			});*/
 		});
 	}
 

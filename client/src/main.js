@@ -5,13 +5,19 @@ const socket = new io();
 const canvas = document.querySelector('.gameCanvas'),
 	context = canvas.getContext('2d');
 
+let canvasWidth, canvasHeight;
+
 const canvasResizeObserver = new ResizeObserver(() => resampleCanvas());
 canvasResizeObserver.observe(canvas);
 
 function resampleCanvas() {
-	canvas.width = canvas.clientWidth;
-	canvas.height = canvas.clientHeight;
+	canvasWidth = window.innerWidth;
+	canvasHeight = window.innerHeight;
+	canvas.width = canvasWidth;
+	canvas.height = canvasHeight;
 }
+
+resampleCanvas();
 
 let inGame = false;
 
@@ -45,11 +51,10 @@ function drawPlayer(p) {
 }
 
 function render() {
-	/*canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;*/
-	context.clearRect(0, 0, canvas.width, canvas.height);
-	context.translate(canvas.width / 2, canvas.height / 2);
+	context.clearRect(0, 0, canvasWidth, canvasHeight);
+	context.save();
 	if (player != undefined) {
+		context.translate(canvasWidth / 2, canvasHeight / 2);
 		const zoom = 48 / Math.sqrt(player.radius);
 		context.scale(zoom, zoom);
 		context.translate(-player.pos.x, -player.pos.y);
@@ -57,6 +62,7 @@ function render() {
 	foods.forEach(f => drawFood(f));
 	if (player != undefined) drawPlayer(player);
 	players.forEach(p => drawPlayer(p));
+	context.restore();
 	requestAnimationFrame(render);
 }
 
@@ -75,8 +81,8 @@ canvas.addEventListener('mousemove', event => {
 	if (inGame) {
 		socket.emit('setDirection', {
 			socketId: socket.id,
-			x: event.clientX - canvas.width / 2,
-			y: event.clientY - canvas.height / 2,
+			x: event.clientX - canvasWidth / 2,
+			y: event.clientY - canvasHeight / 2,
 		});
 	}
 });

@@ -21,6 +21,7 @@ export default class PlayerCell extends Cell {
 
 	update() {
 		this.updateScore();
+		this.updateSpeed();
 		this.move();
 	}
 
@@ -30,7 +31,6 @@ export default class PlayerCell extends Cell {
 	}
 
 	updateSpeed() {
-		//this.speed = 10 / (Math.pow(this.size, 0.15) + 1000 / 60);
 		this.speed = (2.2 * Math.pow(this.radius * 2, -0.43)) / 4;
 	}
 
@@ -56,6 +56,7 @@ export default class PlayerCell extends Cell {
 	}
 
 	canEatCell(cell) {
+		if (this.socketId == cell.socketId) return false;
 		if (
 			this.pos.distance(cell.pos) < this.radius + cell.radius &&
 			this.radius > cell.radius * 1.15

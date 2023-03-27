@@ -25,7 +25,6 @@ io.on('connection', socket => {
 
 	socket.on('join', data => {
 		game.join(socket.id);
-		console.log(game.players);
 	});
 
 	socket.on('getLeaderboard', () => {});
