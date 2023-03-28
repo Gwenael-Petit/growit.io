@@ -6,18 +6,18 @@ export default class Game {
 	players = [];
 	deadQueue = [];
 	foods = [];
-	width;
-	height;
+	static width = 100;
+	static height = 100;
 
 	constructor(width, height) {
-		this.width = width;
-		this.height = height;
+		Game.width = width;
+		Game.height = height;
 
 		for (let i = 0; i < 500; i++) {
 			this.foods.push(
 				new FoodCell(
-					Math.random() * this.width - this.width / 2,
-					Math.random() * this.height - this.height / 2
+					Math.random() * Game.width - Game.width / 2,
+					Math.random() * Game.height - Game.height / 2
 				)
 			);
 		}
@@ -26,8 +26,8 @@ export default class Game {
 	join(socketId) {
 		this.players.push(
 			new PlayerCell(
-				Math.random() * this.width - this.width / 2,
-				Math.random() * this.height - this.height / 2,
+				Math.random() * Game.width - Game.width / 2,
+				Math.random() * Game.height - Game.height / 2,
 				Colors.randomColor(),
 				10,
 				socketId

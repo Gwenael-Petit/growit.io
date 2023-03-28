@@ -1,5 +1,6 @@
 import Cell from './Cell.js';
 import Vec2D from './Vec2D.js';
+import Game from './Game.js';
 
 export default class PlayerCell extends Cell {
 	dir = new Vec2D(0, 0);
@@ -45,6 +46,8 @@ export default class PlayerCell extends Cell {
 		}*/
 		this.dir.normalize();
 		this.dir.multiply(this.speed);
+		if (!PlayerCell.isXInMap(this.pos.x + this.dir.x)) this.dir.x = 0;
+		if (!PlayerCell.isYInMap(this.pos.y + this.dir.y)) this.dir.y = 0;
 		this.pos.add(this.dir);
 	}
 
@@ -65,5 +68,13 @@ export default class PlayerCell extends Cell {
 			return true;
 		}
 		return false;
+	}
+
+	static isXInMap(x) {
+		return x >= -(Game.width / 2) && x <= Game.width / 2;
+	}
+
+	static isYInMap(y) {
+		return y >= -(Game.height / 2) && y <= Game.height / 2;
 	}
 }

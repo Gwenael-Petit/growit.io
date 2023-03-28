@@ -32,19 +32,17 @@ let player,
 
 function drawGrid() {
 	context.beginPath();
-	context.strokeStyle = 'black';
-	context.lineWidth = 0.1;
-	context.globalAlpha = 0.5;
-	for (let x = -mapWidth / 2; x <= mapWidth; x += 5) {
-		context.moveTo(x, -mapHeight / 2);
+	context.strokeStyle = 'gray';
+	context.lineWidth = 0.05;
+	for (let x = -mapWidth; x <= mapWidth; x += 5) {
+		context.moveTo(x, -mapHeight);
 		context.lineTo(x, mapHeight);
 	}
-	for (let y = -mapHeight / 2; y <= mapHeight; y += 5) {
-		context.moveTo(-mapWidth / 2, y);
+	for (let y = -mapHeight; y <= mapHeight; y += 5) {
+		context.moveTo(-mapWidth, y);
 		context.lineTo(mapWidth, y);
 	}
 	context.stroke();
-	context.globalAlpha = 1;
 	context.closePath();
 }
 
@@ -87,8 +85,8 @@ function render() {
 }
 
 socket.on('allowConnection', mapSize => {
-	mapWidth = mapSize.width;
-	mapHeight = mapSize.height;
+	mapWidth = mapSize.width / 2;
+	mapHeight = mapSize.height / 2;
 	//socket.emit('join');
 	//inGame = true;
 });

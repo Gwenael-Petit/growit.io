@@ -18,8 +18,8 @@ const game = new Game(100, 100);
 io.on('connection', socket => {
 	console.log(`Nouvelle connexion du client ${socket.id}`);
 	socket.emit('allowConnection', {
-		width: game.width,
-		height: game.height,
+		width: Game.width,
+		height: Game.height,
 	});
 
 	socket.on('disconnect', reason => {
