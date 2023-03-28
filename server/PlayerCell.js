@@ -58,8 +58,8 @@ export default class PlayerCell extends Cell {
 	canEatCell(cell) {
 		if (this.socketId == cell.socketId) return false;
 		if (
-			this.pos.distance(cell.pos) < this.radius + cell.radius &&
-			this.radius > cell.radius * 1.15
+			this.radius > this.pos.distance(cell.pos) &&
+			this.radius > cell.radius * 1.1
 		) {
 			this.eatCell(cell);
 			return true;

@@ -8,7 +8,9 @@ const canvas = document.querySelector('.gameCanvas'),
 let canvasWidth,
 	canvasHeight,
 	mouseX = 0,
-	mouseY = 0;
+	mouseY = 0,
+	mapWidth,
+	mapHeight;
 
 const canvasResizeObserver = new ResizeObserver(() => resampleCanvas());
 canvasResizeObserver.observe(canvas);
@@ -30,8 +32,19 @@ let player,
 
 function drawGrid() {
 	context.beginPath();
-	context.lineWidth = 1;
-	for (let i = 0; i < 100; i++) {}
+	context.strokeStyle = 'black';
+	context.lineWidth = 0.1;
+	context.globalAlpha = 0.5;
+	for (let x = -mapWidth / 2; x <= mapWidth; x += 5) {
+		context.moveTo(x, -mapHeight / 2);
+		context.lineTo(x, mapHeight);
+	}
+	for (let y = -mapHeight / 2; y <= mapHeight; y += 5) {
+		context.moveTo(-mapWidth / 2, y);
+		context.lineTo(mapWidth, y);
+	}
+	context.stroke();
+	context.globalAlpha = 1;
 	context.closePath();
 }
 
@@ -56,12 +69,16 @@ function drawPlayer(p) {
 function render() {
 	context.clearRect(0, 0, canvasWidth, canvasHeight);
 	context.save();
+	context.translate(canvasWidth / 2, canvasHeight / 2);
 	if (player != undefined) {
-		context.translate(canvasWidth / 2, canvasHeight / 2);
-		//const zoom = 48 / Math.sqrt(player.radius);
-		context.scale(20, 20);
+		const zoom = 48 / Math.sqrt(player.radius);
+		context.scale(zoom, zoom);
+		//context.scale(20, 20);
 		context.translate(-player.pos.x, -player.pos.y);
+	} else {
+		context.scale(20, 20);
 	}
+	drawGrid();
 	foods.forEach(f => drawFood(f));
 	if (player != undefined) drawPlayer(player);
 	players.forEach(p => drawPlayer(p));
@@ -69,18 +86,31 @@ function render() {
 	requestAnimationFrame(render);
 }
 
-socket.on('allowConnection', () => {
-	socket.emit('join');
-	inGame = true;
+socket.on('allowConnection', mapSize => {
+	mapWidth = mapSize.width;
+	mapHeight = mapSize.height;
+	//socket.emit('join');
+	//inGame = true;
+});
+
+socket.on('dead', () => {
+	inGame = false;
 });
 
 socket.on('updateGame', game => {
-	players = game.players;
+	players = game.players.sort((a, b) => a.score > b.score);
 	foods = game.foods;
 	player = players.find(p => p.socketId == socket.id);
 });
 
 render();
+
+document.addEventListener('keydown', event => {
+	if (event.key == 'j') {
+		socket.emit('join');
+		inGame = true;
+	}
+});
 
 canvas.addEventListener('mousemove', event => {
 	if (inGame) {

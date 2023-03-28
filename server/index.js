@@ -17,10 +17,13 @@ const game = new Game(100, 100);
 
 io.on('connection', socket => {
 	console.log(`Nouvelle connexion du client ${socket.id}`);
-	socket.emit('allowConnection');
+	socket.emit('allowConnection', {
+		width: game.width,
+		height: game.height,
+	});
 
 	socket.on('disconnect', reason => {
-		game.death(socket.id);
+		game.remove(socket.id);
 	});
 
 	socket.on('join', data => {
@@ -43,6 +46,11 @@ httpServer.listen(port, () => {
 
 setInterval(() => {
 	game.update();
+	for (let i = game.deadQueue.length - 1; i >= 0; i--) {
+		io.sockets.sockets.get(game.deadQueue[i]).emit('dead');
+		game.deadQueue.splice(i, 1);
+	}
+
 	io.emit('updateGame', {
 		players: game.players,
 		foods: game.foods,

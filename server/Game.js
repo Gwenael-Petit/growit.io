@@ -4,6 +4,7 @@ import Colors from './Colors.js';
 
 export default class Game {
 	players = [];
+	deadQueue = [];
 	foods = [];
 	width;
 	height;
@@ -34,31 +35,32 @@ export default class Game {
 		);
 	}
 
-	death(playerId) {
-		const idx = this.players.indexOf(
-			this.players.find(player => player.socketId == playerId)
-		);
-		this.players.splice(idx, 1);
+	remove(socketId) {
+		const idx = this.players.findIndex(player => player.socketId == socketId);
+		if (idx >= 0) this.players.splice(idx, 1);
 	}
 
 	update() {
 		this.players.forEach(player => {
 			player.update();
-			/*for (let i = this.foods.length - 1; i >= 0; i--) {
+			for (let i = this.foods.length - 1; i >= 0; i--) {
 				if (player.canEatCell(this.foods[i])) {
 					this.foods.splice(i, 1);
 				}
-			}*/
-			/*this.players.forEach(other => {
-				if (player.canEatCell(other)) {
-					this.death(other.socketId);
-				}
-			});*/
+			}
+			for (let i = this.players.length - 1; i >= 0; i--) {
+				this.players.forEach(other => {
+					if (other.canEatCell(this.players[i])) {
+						this.deadQueue.push(this.players[i].socketId);
+						this.players.splice(i, 1);
+					}
+				});
+			}
 		});
 	}
 
 	setDirection(socketId, x, y) {
 		const p = this.players.find(p => p.socketId == socketId);
-		p.setDirection(x, y);
+		if (p != undefined) p.setDirection(x, y);
 	}
 }
