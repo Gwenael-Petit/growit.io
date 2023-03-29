@@ -26,8 +26,8 @@ io.on('connection', socket => {
 		game.remove(socket.id);
 	});
 
-	socket.on('join', data => {
-		game.join(socket.id);
+	socket.on('join', name => {
+		if (game.join(socket.id, name)) socket.emit('joined');
 	});
 
 	socket.on('getLeaderboard', () => {});

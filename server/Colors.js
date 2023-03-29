@@ -1,6 +1,5 @@
 export default class Colors {
 	static colors = [
-		'black',
 		'silver',
 		'gray',
 		'maroon',

@@ -7,11 +7,13 @@ export default class PlayerCell extends Cell {
 	speed;
 	score;
 	socketId;
+	name;
 
-	constructor(x, y, color, score, socketId) {
+	constructor(x, y, color, score, socketId, name) {
 		super(x, y, color, score);
 		this.score = score;
 		this.socketId = socketId;
+		this.name = name;
 		this.updateSpeed();
 	}
 

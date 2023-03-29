@@ -23,16 +23,20 @@ export default class Game {
 		}
 	}
 
-	join(socketId) {
+	join(socketId, name) {
+		if (this.players.find(p => p.socketId == socketId) != undefined)
+			return false;
 		this.players.push(
 			new PlayerCell(
 				Math.random() * Game.width - Game.width / 2,
 				Math.random() * Game.height - Game.height / 2,
 				Colors.randomColor(),
 				10,
-				socketId
+				socketId,
+				name
 			)
 		);
+		return true;
 	}
 
 	remove(socketId) {

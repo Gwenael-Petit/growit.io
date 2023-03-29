@@ -61,6 +61,13 @@ function drawPlayer(p) {
 	context.arc(p.pos.x, p.pos.y, p.radius, 0, 2 * Math.PI, false);
 	context.fill();
 	context.stroke();
+
+	context.textAlign = 'center';
+	context.fillStyle = 'white';
+	context.font = `bold ${p.radius * 0.5}px arial`;
+	context.fillText(p.name, p.pos.x, p.pos.y + p.radius * 0.15);
+	context.strokeStyle = 'black';
+	context.strokeText(p.name, p.pos.x, p.pos.y + p.radius * 0.15);
 	context.closePath();
 }
 
@@ -87,8 +94,10 @@ function render() {
 socket.on('allowConnection', mapSize => {
 	mapWidth = mapSize.width / 2;
 	mapHeight = mapSize.height / 2;
-	//socket.emit('join');
-	//inGame = true;
+});
+
+socket.on('joined', () => {
+	inGame = true;
 });
 
 socket.on('dead', () => {
@@ -105,8 +114,7 @@ render();
 
 document.addEventListener('keydown', event => {
 	if (event.key == 'j') {
-		socket.emit('join');
-		inGame = true;
+		socket.emit('join', 'Bobo');
 	}
 });
 
