@@ -108,7 +108,7 @@ socket.on('updateGame', game => {
 	player = players.find(p => p.socketId == socket.id);
 	if (player != undefined) {
 		refreshScore(player.score);
-		refreshLeaderBoard(players, player);
+		refreshLeaderBoard();
 	}
 });
 
@@ -138,9 +138,13 @@ setInterval(() => {
 }, 1000 / 30);
 
 function refreshLeaderBoard() {
+	const orderedPlayers = players.slice(0, players.length).reverse();
 	let leaderBoard = '';
-	const playerIndex = players.findIndex(p => p.socketId == player.socketId);
-	players.slice(0, 10).forEach((p, idx) => {
+	const playerIndex = orderedPlayers.findIndex(
+		p => p.socketId == player.socketId
+	);
+	console.log(playerIndex);
+	orderedPlayers.slice(0, 10).forEach((p, idx) => {
 		leaderBoard += `<tr><td class="${idx == playerIndex ? 'me' : ''}">${
 			idx + 1
 		}.${p.name}</td></tr>`;
