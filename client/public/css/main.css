@@ -121,7 +121,7 @@ button[type="submit"]:hover {
     z-index: 9;
 		}
 
-table {
+#score-table>table {
     border-collapse: collapse;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -130,18 +130,18 @@ table {
     max-width: 800px;
 }
 
-th, td {
+#score-table>table th, #score-table>table td {
     border: 1px solid #ccc;
     padding: 10px;
     text-align: center;
 }
 
-th {
+#score-table>table th {
     background-color: #333;
     color: #fff;
 }
 
-tr:nth-child(even) {
+#score-table>table tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
@@ -191,3 +191,53 @@ select {
     z-index: 12; 
 }
 
+.score-bubble{
+    position:absolute;
+    bottom: 20px;
+    left: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #333;
+    opacity: 0.6;
+}
+
+.score{
+    color: #fff;
+    font-size: 24px;
+}
+
+.score::before{
+    content: 'score: ';
+}
+
+
+.leaderBoard{
+    display: flex;
+    flex-direction: column;
+    position:absolute;
+    top: 20px;
+    right: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #333;
+    color: #fff;
+    opacity: 0.6;
+    justify-content: center;
+    align-items: left;
+
+}
+
+.leaderBoard>table{
+    font-size: 18px;
+}
+
+.leaderBoard>h3{
+    font-size: 24px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+
+}
+
+.me{
+    color: red;
+}

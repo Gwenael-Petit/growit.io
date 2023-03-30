@@ -78,14 +78,12 @@ function render() {
 	if (player != undefined) {
 		const zoom = 48 / Math.sqrt(player.radius);
 		context.scale(zoom, zoom);
-		//context.scale(20, 20);
 		context.translate(-player.pos.x, -player.pos.y);
 	} else {
 		context.scale(20, 20);
 	}
 	drawGrid();
 	foods.forEach(f => drawFood(f));
-	if (player != undefined) drawPlayer(player);
 	players.forEach(p => drawPlayer(p));
 	context.restore();
 	requestAnimationFrame(render);
@@ -108,6 +106,10 @@ socket.on('updateGame', game => {
 	players = game.players.sort((a, b) => a.score > b.score);
 	foods = game.foods;
 	player = players.find(p => p.socketId == socket.id);
+	if (player != undefined) {
+		refreshScore(player.score);
+		refreshLeaderBoard(players, player);
+	}
 });
 
 render();
@@ -134,6 +136,23 @@ setInterval(() => {
 		});
 	}
 }, 1000 / 30);
+
+function refreshLeaderBoard() {
+	let leaderBoard = '';
+	const playerIndex = players.findIndex(p => p.socketId == player.socketId);
+	players.slice(0, 10).forEach((p, idx) => {
+		leaderBoard += `<tr><td class="${idx == playerIndex ? 'me' : ''}">${
+			idx + 1
+		}.${p.name}</td></tr>`;
+	});
+	if (playerIndex >= 10)
+		leaderBoard += `<tr><td>${playerIndex}.${player.name}</td></tr>`;
+	document.querySelector('.bodyBoard').innerHTML = leaderBoard;
+}
+
+function refreshScore(score) {
+	document.querySelector('.score').innerHTML = score;
+}
 
 /*const filterNameInput = document.getElementById('filter-name');
         const rows = document.querySelectorAll('tbody tr');
