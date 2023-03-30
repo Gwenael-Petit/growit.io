@@ -23,7 +23,8 @@ io.on('connection', socket => {
 	});
 
 	socket.on('disconnect', reason => {
-		game.remove(socket.id);
+		console.log(`Déconnection du client ${socket.id}`);
+		game.disconnect(socket.id);
 	});
 
 	socket.on('join', name => {
@@ -45,11 +46,12 @@ httpServer.listen(port, () => {
 });
 
 setInterval(() => {
-	game.update();
 	for (let i = game.deadQueue.length - 1; i >= 0; i--) {
 		io.sockets.sockets.get(game.deadQueue[i]).emit('dead');
 		game.deadQueue.splice(i, 1);
 	}
+
+	game.update();
 
 	io.emit('updateGame', {
 		players: game.players,

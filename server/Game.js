@@ -39,7 +39,7 @@ export default class Game {
 		return true;
 	}
 
-	remove(socketId) {
+	disconnect(socketId) {
 		const idx = this.players.findIndex(player => player.socketId == socketId);
 		if (idx >= 0) this.players.splice(idx, 1);
 	}
@@ -52,15 +52,19 @@ export default class Game {
 					this.foods.splice(i, 1);
 				}
 			}
-			for (let i = this.players.length - 1; i >= 0; i--) {
-				this.players.forEach(other => {
-					if (other.canEatCell(this.players[i])) {
-						this.deadQueue.push(this.players[i].socketId);
-						this.players.splice(i, 1);
-					}
-				});
-			}
 		});
+		for (let i = this.players.length - 1; i >= 0; i--) {
+			for (const other of this.players) {
+				if (
+					this.players[i].socketId != other.socketId &&
+					other.canEatCell(this.players[i])
+				) {
+					this.deadQueue.push(this.players[i].socketId);
+					this.players.splice(i, 1);
+					break;
+				}
+			}
+		}
 	}
 
 	setDirection(socketId, x, y) {
