@@ -8,6 +8,7 @@ export default class PlayerCell extends Cell {
 	score;
 	socketId;
 	name;
+	zoom;
 
 	constructor(x, y, color, score, socketId, name) {
 		super(x, y, color, score);
@@ -24,6 +25,7 @@ export default class PlayerCell extends Cell {
 
 	update() {
 		this.updateScore();
+		this.updateZoom();
 		this.updateSpeed();
 		this.move();
 	}
@@ -37,20 +39,21 @@ export default class PlayerCell extends Cell {
 		this.speed = (2.2 * Math.pow(this.radius * 2, -0.43)) / 4;
 	}
 
+	updateZoom() {
+		this.zoom = 48 / Math.sqrt(this.radius);
+	}
+
 	move() {
-		/*const len = this.dir.length();
-		if (len <= this.radius) {
-			this.dir.normalize();
-			this.dir.multiply(1 - len);
-		} else {
-			this.dir.normalize();
-			this.dir.multiply(this.speed);
-		}*/
-		this.dir.normalize();
-		this.dir.multiply(this.speed);
-		if (!PlayerCell.isXInMap(this.pos.x + this.dir.x)) this.dir.x = 0;
-		if (!PlayerCell.isYInMap(this.pos.y + this.dir.y)) this.dir.y = 0;
-		this.pos.add(this.dir);
+		const len = this.dir.length();
+		const vec = this.dir.normalize();
+		vec.multiply(this.speed);
+		const displayRadius = this.radius * this.zoom;
+		if (len < displayRadius) {
+			vec.multiply(1 - (displayRadius - len) / displayRadius);
+		}
+		if (!PlayerCell.isXInMap(this.pos.x + vec.x)) vec.x = 0;
+		if (!PlayerCell.isYInMap(this.pos.y + vec.y)) vec.y = 0;
+		this.pos.add(vec);
 	}
 
 	eatCell(cell) {
