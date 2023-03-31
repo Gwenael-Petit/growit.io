@@ -51,8 +51,8 @@ export default class PlayerCell extends Cell {
 		if (len < displayRadius) {
 			vec.multiply(1 - (displayRadius - len) / displayRadius);
 		}
-		if (!PlayerCell.isXInMap(this.pos.x + vec.x)) vec.x = 0;
-		if (!PlayerCell.isYInMap(this.pos.y + vec.y)) vec.y = 0;
+		if (!PlayerCell.isXInMap(this.pos.x + vec.x, this.radius)) vec.x = 0;
+		if (!PlayerCell.isYInMap(this.pos.y + vec.y, this.radius)) vec.y = 0;
 		this.pos.add(vec);
 	}
 
@@ -74,11 +74,17 @@ export default class PlayerCell extends Cell {
 		return false;
 	}
 
-	static isXInMap(x) {
-		return x >= -(Game.width / 2) && x <= Game.width / 2;
+	static isXInMap(x, radius) {
+		return (
+			x >= -(Game.width / 2) + radius * 0.7 &&
+			x <= Game.width / 2 - radius * 0.7
+		);
 	}
 
-	static isYInMap(y) {
-		return y >= -(Game.height / 2) && y <= Game.height / 2;
+	static isYInMap(y, radius) {
+		return (
+			y >= -(Game.height / 2) + radius * 0.7 &&
+			y <= Game.height / 2 - radius * 0.7
+		);
 	}
 }

@@ -8,19 +8,21 @@ export default class Game {
 	foods = [];
 	static width = 100;
 	static height = 100;
+	maxFoods;
 
 	constructor(width, height) {
 		Game.width = width;
 		Game.height = height;
+		this.maxFoods = width * height * 0.02;
+	}
 
-		for (let i = 0; i < 500; i++) {
-			this.foods.push(
-				new FoodCell(
-					Math.random() * Game.width - Game.width / 2,
-					Math.random() * Game.height - Game.height / 2
-				)
-			);
-		}
+	spawnFood() {
+		this.foods.push(
+			new FoodCell(
+				Math.random() * Game.width - Game.width / 2,
+				Math.random() * Game.height - Game.height / 2
+			)
+		);
 	}
 
 	join(socketId, name) {
@@ -65,6 +67,8 @@ export default class Game {
 				}
 			}
 		}
+
+		if (this.foods.length <= this.maxFoods) this.spawnFood();
 	}
 
 	setDirection(socketId, x, y) {
