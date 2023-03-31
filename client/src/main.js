@@ -103,7 +103,9 @@ socket.on('dead', () => {
 });
 
 socket.on('updateGame', game => {
-	players = game.players.sort((a, b) => a.score > b.score);
+	players = game.players.sort((a, b) => {
+		return a.score - b.score;
+	});
 	foods = game.foods;
 	player = players.find(p => p.socketId == socket.id);
 	if (player != undefined) {
