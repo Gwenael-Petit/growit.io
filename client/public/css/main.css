@@ -249,3 +249,11 @@ select {
 .hideMenu{
     display: none;
 }
+
+.time::before{
+    content: 'Temps survécu';
+}
+
+.eaten::before{
+    content: 'boules mangés';
+}
