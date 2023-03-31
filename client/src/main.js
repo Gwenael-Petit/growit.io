@@ -1,5 +1,7 @@
 import { io } from 'socket.io-client';
 
+const interpolationStep = 0.1;
+
 const socket = new io();
 
 const canvas = document.querySelector('.gameCanvas'),
@@ -27,6 +29,7 @@ resampleCanvas();
 let inGame = false;
 
 let player,
+	actualZoom = 0,
 	players = [],
 	foods = [];
 
@@ -76,8 +79,7 @@ function render() {
 	context.save();
 	context.translate(canvasWidth / 2, canvasHeight / 2);
 	if (player != undefined) {
-		const zoom = 48 / Math.sqrt(player.radius);
-		context.scale(zoom, zoom);
+		context.scale(actualZoom, actualZoom);
 		context.translate(-player.pos.x, -player.pos.y);
 	} else {
 		context.scale(20, 20);
@@ -116,12 +118,6 @@ socket.on('updateGame', game => {
 
 render();
 
-document.addEventListener('keydown', event => {
-	if (event.key == 'j') {
-		socket.emit('join', 'Bobo');
-	}
-});
-
 const mainMenu = document.querySelector('.menu');
 const playButton = document.querySelector('.play');
 const leaderBoard = document.querySelector('.leaderBoard');
@@ -145,6 +141,17 @@ canvas.addEventListener('mousemove', event => {
 
 setInterval(() => {
 	if (inGame) {
+		if (actualZoom == 0) actualZoom = player.zoom;
+		const diffZoom = player.zoom - actualZoom;
+
+		actualZoom = player.zoom;
+		/*if (diffZoom > interpolationStep) diffZoom = interpolationStep;
+		if (diffZoom < 0) {
+			actualZoom -= interpolationStep;
+		} else if (diffZoom > 0) {
+			actualZoom += interpolationStep;
+		}*/
+
 		socket.emit('setDirection', {
 			socketId: socket.id,
 			x: mouseX,
