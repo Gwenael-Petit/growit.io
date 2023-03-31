@@ -122,6 +122,20 @@ document.addEventListener('keydown', event => {
 	}
 });
 
+const mainMenu = document.querySelector('.menu');
+const playButton = document.querySelector('.play');
+const leaderBoard = document.querySelector('.leaderBoard');
+const score = document.querySelector('.score-bubble');
+const loginForm = document.querySelector('.loginForm');
+const nameInput = loginForm.querySelector('input[type=text]');
+playButton.addEventListener('click', event => {
+	event.preventDefault();
+	mainMenu.classList.add('hideMenu');
+	leaderBoard.classList.remove('hideDisplays');
+	score.classList.remove('hideDisplays');
+	socket.emit('join', nameInput.value);
+});
+
 canvas.addEventListener('mousemove', event => {
 	if (inGame) {
 		mouseX = event.clientX - canvasWidth / 2;
