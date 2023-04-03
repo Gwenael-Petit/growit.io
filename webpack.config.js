@@ -15,14 +15,20 @@ export default {
 	module: {
 		rules: [
 			{
-				test: /\.js$/, // tous les fichiers js ...
+				test: /\.(ts|js)$/, // tous les fichiers js ou ts ...
 				exclude: /node_modules/, // ... sauf le dossier node_modules ...
 				use: {
-					// ... seront compilés par babel !
-					loader: 'babel-loader',
+					// ... seront compilés par tsc !
+					loader: 'ts-loader',
+					options: {
+						configFile: 'tsconfig.client.json',
+					},
 				},
 			},
 		],
+	},
+	resolve: {
+		extensions: ['.ts', '.js'],
 	},
 	devtool: 'source-map',
 	devServer: {

@@ -10,7 +10,7 @@ const endGameMenu = document.querySelector('.endGame');
 const menuButton = document.querySelector('.menuButton');
 const playAgain = document.querySelector('.playAgain');
 
-const interpolationStep = 0.1;
+const interpolationZoomStep = 0.1;
 
 const socket = new io();
 
@@ -157,17 +157,6 @@ canvas.addEventListener('mousemove', event => {
 
 setInterval(() => {
 	if (inGame) {
-		if (actualZoom == 0) actualZoom = player.zoom;
-		const diffZoom = player.zoom - actualZoom;
-
-		actualZoom = player.zoom;
-		/*if (diffZoom > interpolationStep) diffZoom = interpolationStep;
-		if (diffZoom < 0) {
-			actualZoom -= interpolationStep;
-		} else if (diffZoom > 0) {
-			actualZoom += interpolationStep;
-		}*/
-
 		socket.emit('setDirection', {
 			socketId: socket.id,
 			x: mouseX,
@@ -176,13 +165,23 @@ setInterval(() => {
 	}
 }, 1000 / 30);
 
+setInterval(() => {
+	if (inGame) {
+		/*actualZoom =
+			Math.round(
+				interpolate(actualZoom, player.zoom, interpolationZoomStep) * 100
+			) / 100;
+		console.log(actualZoom);*/
+		actualZoom = player.zoom;
+	}
+}, 1000 / 60);
+
 function refreshLeaderBoard() {
 	const orderedPlayers = players.slice(0, players.length).reverse();
 	let leaderBoard = '';
 	const playerIndex = orderedPlayers.findIndex(
 		p => p.socketId == player.socketId
 	);
-	console.log(playerIndex);
 	orderedPlayers.slice(0, 10).forEach((p, idx) => {
 		leaderBoard += `<tr><td class="${idx == playerIndex ? 'me' : ''}">${
 			idx + 1
@@ -197,31 +196,9 @@ function refreshScore(score) {
 	document.querySelector('.score').innerHTML = score;
 }
 
-/*const filterNameInput = document.getElementById('filter-name');
-        const rows = document.querySelectorAll('tbody tr');
-		const table = document.querySelector('table');
-		const rowToSort = Array.from(table.querySelectorAll('tbody tr'));
-
-		rowToSort.sort((a, b) => parseInt(b.cells[1].textContent) - parseInt(a.cells[1].textContent));
-
-		rowToSort.forEach(row => table.appendChild(row));
-        
-        filterNameInput.addEventListener('input', () => {
-            filterRows();
-        });
-        
-        
-        function filterRows() {
-            const filterName = filterNameInput.value.trim().toLowerCase();
-            
-            rows.forEach(row => {
-                const name = row.querySelector('td:first-child').textContent.trim().toLowerCase();
-                
-                if (filterName === '' || name.includes(filterName)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
+/*function interpolate(actual, goal, t) {
+	const diff = Math.round((goal - actual) * 100) / 100;
+	if (diff == 0) return goal;
+	if (diff > 0) return actual + t > goal ? actual + diff : actual + t;
+	return actual - t < goal ? actual - diff : actual - t;
 }*/
