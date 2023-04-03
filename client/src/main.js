@@ -1,5 +1,15 @@
 import { io } from 'socket.io-client';
 
+const mainMenu = document.querySelector('.menu');
+const playButton = document.querySelector('.play');
+const leaderBoard = document.querySelector('.leaderBoard');
+const score = document.querySelector('.score-bubble');
+const loginForm = document.querySelector('.loginForm');
+const nameInput = loginForm.querySelector('input[type=text]');
+const endGameMenu = document.querySelector('.endGame');
+const menuButton = document.querySelector('.menuButton');
+const playAgain = document.querySelector('.playAgain');
+
 const interpolationStep = 0.1;
 
 const socket = new io();
@@ -101,6 +111,10 @@ socket.on('joined', () => {
 });
 
 socket.on('dead', () => {
+	console.log(endGameMenu);
+	endGameMenu.classList.remove('hideMenu');
+	leaderBoard.classList.add('hideDisplays');
+	score.classList.add('hideDisplays');
 	inGame = false;
 });
 
@@ -118,15 +132,17 @@ socket.on('updateGame', game => {
 
 render();
 
-const mainMenu = document.querySelector('.menu');
-const playButton = document.querySelector('.play');
-const leaderBoard = document.querySelector('.leaderBoard');
-const score = document.querySelector('.score-bubble');
-const loginForm = document.querySelector('.loginForm');
-const nameInput = loginForm.querySelector('input[type=text]');
 playButton.addEventListener('click', event => {
 	event.preventDefault();
 	mainMenu.classList.add('hideMenu');
+	leaderBoard.classList.remove('hideDisplays');
+	score.classList.remove('hideDisplays');
+	socket.emit('join', nameInput.value);
+});
+
+playAgain.addEventListener('click', event => {
+	event.preventDefault();
+	endGameMenu.classList.add('hideMenu');
 	leaderBoard.classList.remove('hideDisplays');
 	score.classList.remove('hideDisplays');
 	socket.emit('join', nameInput.value);

@@ -76,6 +76,18 @@ button[type="submit"] {
     width: 100%;
     max-width: 400px;
 }
+.button {
+    border: none;
+    padding: 10px;
+    font-size: 18px;
+    background-color: #333;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    max-width: 400px;
+}
 
 button[type="submit"]:hover {
     background-color: #444;
@@ -176,7 +188,7 @@ select {
     flex-direction: row;
 }
 
-.rejouer{
+.endGame{
     background-color: #fff;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -189,6 +201,7 @@ select {
     flex-direction: column;
     position: absolute;
     z-index: 12; 
+    text-align: center;
 }
 
 .score-bubble{
@@ -251,9 +264,13 @@ select {
 }
 
 .time::before{
-    content: 'Temps survécu';
+    content: 'Temps survécu:';
 }
 
 .eaten::before{
-    content: 'boules mangés';
+    content: 'Boules mangés:';
+}
+
+.points::before{
+    content: 'Score:';
 }
