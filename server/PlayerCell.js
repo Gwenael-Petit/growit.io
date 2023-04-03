@@ -51,9 +51,8 @@ export default class PlayerCell extends Cell {
 		if (len < displayRadius) {
 			vec.multiply(1 - (displayRadius - len) / displayRadius);
 		}
-		if (!PlayerCell.isXInMap(this.pos.x + vec.x, this.radius)) vec.x = 0;
-		if (!PlayerCell.isYInMap(this.pos.y + vec.y, this.radius)) vec.y = 0;
 		this.pos.add(vec);
+		this.returnInMapIfIsOut();
 	}
 
 	eatCell(cell) {
@@ -74,17 +73,19 @@ export default class PlayerCell extends Cell {
 		return false;
 	}
 
-	static isXInMap(x, radius) {
-		return (
-			x >= -(Game.width / 2) + radius * 0.7 &&
-			x <= Game.width / 2 - radius * 0.7
-		);
-	}
-
-	static isYInMap(y, radius) {
-		return (
-			y >= -(Game.height / 2) + radius * 0.7 &&
-			y <= Game.height / 2 - radius * 0.7
-		);
+	returnInMapIfIsOut() {
+		const radius30Percent = this.radius * 0.3;
+		if (this.pos.x <= -Game.width / 2 + radius30Percent) {
+			this.pos.x = -Game.width / 2 + radius30Percent;
+		}
+		if (this.pos.x >= Game.width / 2 - radius30Percent) {
+			this.pos.x = Game.width / 2 - radius30Percent;
+		}
+		if (this.pos.y <= -Game.height / 2 + radius30Percent) {
+			this.pos.y = -Game.height / 2 + radius30Percent;
+		}
+		if (this.pos.y >= Game.height / 2 - radius30Percent) {
+			this.pos.y = Game.height / 2 - radius30Percent;
+		}
 	}
 }
