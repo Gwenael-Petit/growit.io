@@ -1,5 +1,5 @@
 export default class Colors {
-	static colors = [
+	static colors: string[] = [
 		'silver',
 		'gray',
 		'maroon',
@@ -15,7 +15,7 @@ export default class Colors {
 		'aqua',
 	];
 
-	static randomColor() {
+	static randomColor(): string {
 		return this.colors[Math.floor(Math.random() * this.colors.length)];
 	}
 }

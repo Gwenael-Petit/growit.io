@@ -1,22 +1,28 @@
-import PlayerCell from './PlayerCell.js';
-import FoodCell from './FoodCell.js';
-import Colors from './Colors.js';
+import PlayerCell from './PlayerCell';
+import FoodCell from './FoodCell';
+import Colors from './Colors';
 
 export default class Game {
-	players = [];
-	deadQueue = [];
-	foods = [];
-	static width = 100;
-	static height = 100;
-	maxFoods;
+	players: PlayerCell[] = [];
+	deadQueue: string[] = [];
+	foods: FoodCell[] = [];
+	static width: number = 100;
+	static height: number = 100;
+	maxFoods: number = 1000;
 
-	constructor(width, height) {
+	constructor(width: number, height: number) {
 		Game.width = width;
 		Game.height = height;
-		this.maxFoods = width * height * 0.02;
 	}
 
-	spawnFood() {
+	respawnFood(): void {
+		const toSpawn = this.maxFoods - this.foods.length;
+		for (let i = 0; i < toSpawn; i++) {
+			this.spawnFood();
+		}
+	}
+
+	spawnFood(): void {
 		this.foods.push(
 			new FoodCell(
 				Math.random() * Game.width - Game.width / 2,
@@ -25,7 +31,7 @@ export default class Game {
 		);
 	}
 
-	join(socketId, name) {
+	join(socketId: string, name: string): boolean {
 		if (this.players.find(p => p.socketId == socketId) != undefined)
 			return false;
 		this.players.push(
@@ -41,12 +47,12 @@ export default class Game {
 		return true;
 	}
 
-	disconnect(socketId) {
+	disconnect(socketId: string): void {
 		const idx = this.players.findIndex(player => player.socketId == socketId);
 		if (idx >= 0) this.players.splice(idx, 1);
 	}
 
-	update() {
+	update(): void {
 		this.players.forEach(player => {
 			player.update();
 			for (let i = this.foods.length - 1; i >= 0; i--) {
@@ -67,11 +73,9 @@ export default class Game {
 				}
 			}
 		}
-
-		if (this.foods.length <= this.maxFoods) this.spawnFood();
 	}
 
-	setDirection(socketId, x, y) {
+	setDirection(socketId: string, x: number, y: number): void {
 		const p = this.players.find(p => p.socketId == socketId);
 		if (p != undefined) p.setDirection(x, y);
 	}

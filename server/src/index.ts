@@ -1,9 +1,28 @@
 import http from 'http';
 import express from 'express';
 import fs from 'fs';
-import addWebpackMiddleware from './addWebpackMiddleware.js';
+import addWebpackMiddleware from './addWebpackMiddleware';
 import { Server as IOServer } from 'socket.io';
-import Game from './Game.js';
+import Game from './Game';
+import PlayerCell from './PlayerCell';
+import FoodCell from './FoodCell';
+
+type DirectionMessage = { socketId: string; x: number; y: number };
+type AllowConnectionMessage = { width: number; height: number };
+type UpdateGameMessage = { players: PlayerCell[]; foods: FoodCell[] };
+
+interface ServerToClientsEvents {
+	allowConnection: (size: AllowConnectionMessage) => void;
+	joined: () => void;
+	dead: () => void;
+	updateGame: (game: UpdateGameMessage) => void;
+}
+
+interface ClientToServerEvents {
+	join: (name: string) => void;
+	setDirection: (direction: DirectionMessage) => void;
+	getLeaderboard: () => void;
+}
 
 const app = express();
 
@@ -11,9 +30,11 @@ addWebpackMiddleware(app);
 
 const httpServer = http.createServer(app);
 
-const io = new IOServer(httpServer);
+const io = new IOServer<ClientToServerEvents, ServerToClientsEvents>(
+	httpServer
+);
 
-const game = new Game(100, 100);
+const game = new Game(500, 500);
 
 io.on('connection', socket => {
 	console.log(`Nouvelle connexion du client ${socket.id}`);
@@ -33,8 +54,8 @@ io.on('connection', socket => {
 
 	socket.on('getLeaderboard', () => {});
 
-	socket.on('setDirection', data => {
-		game.setDirection(data.socketId, data.x, data.y);
+	socket.on('setDirection', direction => {
+		game.setDirection(direction.socketId, direction.x, direction.y);
 	});
 });
 
@@ -47,7 +68,7 @@ httpServer.listen(port, () => {
 
 setInterval(() => {
 	for (let i = game.deadQueue.length - 1; i >= 0; i--) {
-		io.sockets.sockets.get(game.deadQueue[i]).emit('dead');
+		io.sockets.sockets.get(game.deadQueue[i])?.emit('dead');
 		game.deadQueue.splice(i, 1);
 	}
 
@@ -58,3 +79,7 @@ setInterval(() => {
 		foods: game.foods,
 	});
 }, 1000 / 60);
+
+setInterval(() => {
+	game.respawnFood();
+}, 5000);

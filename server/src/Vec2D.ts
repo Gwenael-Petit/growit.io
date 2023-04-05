@@ -1,32 +1,32 @@
 export default class Vec2D {
-	x;
-	y;
+	x: number;
+	y: number;
 
-	constructor(x, y) {
+	constructor(x: number, y: number) {
 		this.x = x;
 		this.y = y;
 	}
 
-	add(other) {
+	add(other: Vec2D): void {
 		this.x += other.x;
 		this.y += other.y;
 	}
 
-	substract(other) {
+	substract(other: Vec2D): void {
 		this.x -= other.x;
 		this.y -= other.y;
 	}
 
-	multiply(n) {
+	multiply(n: number): void {
 		this.x *= n;
 		this.y *= n;
 	}
 
-	length() {
+	length(): number {
 		return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
 	}
 
-	normalize() {
+	normalize(): Vec2D {
 		const newVec = new Vec2D(this.x, this.y);
 		const len = this.length();
 		if (len != 0) {
@@ -36,7 +36,7 @@ export default class Vec2D {
 		return newVec;
 	}
 
-	distance(other) {
+	distance(other: Vec2D): number {
 		return Math.sqrt(
 			Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2)
 		);
