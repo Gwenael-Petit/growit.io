@@ -7,8 +7,10 @@ const score = document.querySelector('.score-bubble');
 const loginForm = document.querySelector('.loginForm');
 const nameInput = loginForm.querySelector('input[type=text]');
 const endGameMenu = document.querySelector('.endGame');
-const menuButton = document.querySelector('.menuButton');
 const playAgain = document.querySelector('.playAgain');
+const scoreLink = document.querySelector('.scoreLink');
+const scoreTable = document.querySelector('.scoreTable');
+const backToMenu = document.querySelectorAll('.backToMenu');
 
 const interpolationZoomStep = 0.1;
 
@@ -147,6 +149,19 @@ playAgain.addEventListener('click', event => {
 	score.classList.remove('hideDisplays');
 	socket.emit('join', nameInput.value);
 });
+
+scoreLink.addEventListener('click', event => {
+	event.preventDefault();
+	scoreTable.classList.remove('hideMenu');
+	mainMenu.classList.add('hideMenu');
+});
+
+/*backToMenu.forEach.addEventListener('click', event => {
+	event.preventDefault();
+	mainMenu.classList.remove('hideMenu');
+	scoreTable.classList.add('hideMenu');
+	endGameMenu.classList.add('hideMenu');
+});*/
 
 canvas.addEventListener('mousemove', event => {
 	if (inGame) {
