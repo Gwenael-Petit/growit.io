@@ -347,6 +347,7 @@ img{
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    max-width: 200px;
   }
 
   .backToMenu:hover{
@@ -359,4 +360,24 @@ img{
 
   ul{
     padding: 0;
+  }
+
+  .playAgain{
+    display: block;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    max-width: 200px;
+  }
+
+  .playAgain:hover{
+    background-color: #444;
+    border: 2px solid;
+    border-color: red;
+    padding: 8px;
+    max-width: 200px;
   }

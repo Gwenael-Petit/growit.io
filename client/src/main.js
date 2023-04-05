@@ -10,7 +10,8 @@ const endGameMenu = document.querySelector('.endGame');
 const playAgain = document.querySelector('.playAgain');
 const scoreLink = document.querySelector('.scoreLink');
 const scoreTable = document.querySelector('.scoreTable');
-const backToMenu = document.querySelectorAll('.backToMenu');
+const backToMenuScore = document.querySelector('.menu1');
+const backToMenuEndGame = document.querySelector('.menu2');
 
 const interpolationZoomStep = 0.1;
 
@@ -110,13 +111,16 @@ socket.on('allowConnection', mapSize => {
 
 socket.on('joined', () => {
 	inGame = true;
+	time = 0;
 });
 
+let time = 0;
+let finalScore = 0;
 socket.on('dead', () => {
-	console.log(endGameMenu);
 	endGameMenu.classList.remove('hideMenu');
 	leaderBoard.classList.add('hideDisplays');
 	score.classList.add('hideDisplays');
+	endGameData(finalScore);
 	inGame = false;
 });
 
@@ -129,6 +133,7 @@ socket.on('updateGame', game => {
 	if (player != undefined) {
 		refreshScore(player.score);
 		refreshLeaderBoard();
+		finalScore = player.score;
 	}
 });
 
@@ -140,6 +145,7 @@ playButton.addEventListener('click', event => {
 	leaderBoard.classList.remove('hideDisplays');
 	score.classList.remove('hideDisplays');
 	socket.emit('join', nameInput.value);
+	time = 0;
 });
 
 playAgain.addEventListener('click', event => {
@@ -148,6 +154,7 @@ playAgain.addEventListener('click', event => {
 	leaderBoard.classList.remove('hideDisplays');
 	score.classList.remove('hideDisplays');
 	socket.emit('join', nameInput.value);
+	time = 0;
 });
 
 scoreLink.addEventListener('click', event => {
@@ -156,12 +163,17 @@ scoreLink.addEventListener('click', event => {
 	mainMenu.classList.add('hideMenu');
 });
 
-/*backToMenu.forEach.addEventListener('click', event => {
+backToMenuScore.addEventListener('click', event => {
 	event.preventDefault();
 	mainMenu.classList.remove('hideMenu');
 	scoreTable.classList.add('hideMenu');
+});
+
+backToMenuEndGame.addEventListener('click', event => {
+	event.preventDefault();
+	mainMenu.classList.remove('hideMenu');
 	endGameMenu.classList.add('hideMenu');
-});*/
+});
 
 canvas.addEventListener('mousemove', event => {
 	if (inGame) {
@@ -178,6 +190,8 @@ setInterval(() => {
 			y: mouseY,
 		});
 	}
+	time++;
+	console.log(Math.round(time / 30));
 }, 1000 / 30);
 
 setInterval(() => {
@@ -209,6 +223,14 @@ function refreshLeaderBoard() {
 
 function refreshScore(score) {
 	document.querySelector('.score').innerHTML = score;
+}
+
+const timeSurvived = document.querySelector('.time');
+const eatenFood = document.querySelector('.eaten');
+const pointsGained = document.querySelector('.points');
+function endGameData(score) {
+	pointsGained.innerHTML = score;
+	timeSurvived.innerHTML = Math.round(time / 30);
 }
 
 /*function interpolate(actual, goal, t) {
