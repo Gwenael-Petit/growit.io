@@ -291,15 +291,15 @@ select {
 }
 
 .time::before{
-    content: 'Temps survécu: ';
+    content: 'Temps survécu : ';
 }
 
 .eaten::before{
-    content: 'Boules mangés: ';
+    content: 'Boules mangés : ';
 }
 
 .points::before{
-    content: 'Score: ';
+    content: 'Score : ';
 }
 
 img{

@@ -3,6 +3,7 @@ import FoodCell from './FoodCell';
 import Colors from './Colors';
 
 export default class Game {
+	static defaultPlayerSize: number = 10;
 	players: PlayerCell[] = [];
 	deadQueue: PlayerCell[] = [];
 	foods: FoodCell[] = [];
@@ -39,7 +40,7 @@ export default class Game {
 				Math.random() * Game.width - Game.width / 2,
 				Math.random() * Game.height - Game.height / 2,
 				color,
-				10,
+				Game.defaultPlayerSize,
 				socketId,
 				name
 			)
@@ -67,6 +68,7 @@ export default class Game {
 				if (player.socketId != other.socketId && other.canEatCell(player)) {
 					this.deadQueue.push(player);
 					player.deathTimeStamp = new Date().getTime();
+					player.score -= Game.defaultPlayerSize;
 					this.players.splice(i, 1);
 					break;
 				}

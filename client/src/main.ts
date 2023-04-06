@@ -268,7 +268,6 @@ const eatenFood = document.querySelector('.eaten') as HTMLLIElement;
 const pointsGained = document.querySelector('.points') as HTMLLIElement;
 
 function endGameData(score: number, timeAlive: Date): void {
-	console.log(timeAlive);
 	timeSurvived.innerHTML = `${timeAlive.getMinutes()}m:${timeAlive.getSeconds()}s`;
 	eatenFood.innerHTML = `${score}`;
 }
