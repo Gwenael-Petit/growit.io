@@ -1,4 +1,4 @@
-import Vec2D from './Vec2D';
+import Vec2D from '../../common/Vec2D';
 
 export default class Cell {
 	pos: Vec2D;

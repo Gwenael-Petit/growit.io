@@ -1,7 +1,7 @@
 {
 	"extends": "./tsconfig.json",
 	"compilerOptions": {
-		"rootDir": "client/src",
+		"rootDirs": ["client/src", "common"],
 		"outDir": "client/public/build/",
 		"target": "ES5",
 		"module": "ES2022",

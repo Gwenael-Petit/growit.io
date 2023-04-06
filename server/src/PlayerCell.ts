@@ -1,5 +1,5 @@
 import Cell from './Cell';
-import Vec2D from './Vec2D';
+import Vec2D from '../../common/Vec2D';
 import Game from './Game';
 
 export default class PlayerCell extends Cell {

@@ -1,40 +1,52 @@
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
+import {
+	ServerToClientsEvents,
+	ClientToServerEvents,
+} from '../../common/socketInterfaces';
+import {
+	FoodCellMessage,
+	PlayerCellMessage,
+} from '../../common/socketMessages';
 
-const mainMenu = document.querySelector('.menu');
-const playButton = document.querySelector('.play');
-const leaderBoard = document.querySelector('.leaderBoard');
-const score = document.querySelector('.score-bubble');
-const loginForm = document.querySelector('.loginForm');
-const nameInput = loginForm.querySelector('input[type=text]');
-const endGameMenu = document.querySelector('.endGame');
-const playAgain = document.querySelector('.playAgain');
-const scoreLink = document.querySelector('.scoreLink');
-const scoreTable = document.querySelector('.scoreTable');
-const backToMenuScore = document.querySelector('.menu1');
-const backToMenuEndGame = document.querySelector('.menu2');
-const backToMenuCredits = document.querySelector('.menu3');
-const creditsLink = document.querySelector('.creditsLink');
-const credits = document.querySelector('.credits');
-const colorChoice = document.querySelectorAll('.color-picker');
+const mainMenu = document.querySelector('.menu') as HTMLDivElement;
+const playButton = document.querySelector('.play') as HTMLButtonElement;
+const leaderBoard = document.querySelector('.leaderBoard') as HTMLDivElement;
+const score = document.querySelector('.score-bubble') as HTMLDivElement;
+const loginForm = document.querySelector('.loginForm') as HTMLFormElement;
+const nameInput = loginForm.querySelector(
+	'input[type=text]'
+) as HTMLInputElement;
+const endGameMenu = document.querySelector('.endGame') as HTMLDivElement;
+const playAgain = document.querySelector('.playAgain') as HTMLAnchorElement;
+const scoreLink = document.querySelector('.scoreLink') as HTMLAnchorElement;
+const scoreTable = document.querySelector('.scoreTable') as HTMLDivElement;
+const backToMenuScore = document.querySelector('.menu1') as HTMLAnchorElement;
+const backToMenuEndGame = document.querySelector('.menu2') as HTMLAnchorElement;
+const backToMenuCredits = document.querySelector('.menu3') as HTMLAnchorElement;
+const creditsLink = document.querySelector('.creditsLink') as HTMLAnchorElement;
+const credits = document.querySelector('.credits') as HTMLDivElement;
+const colorChoice = document.querySelectorAll(
+	'.color-picker'
+) as NodeListOf<HTMLSpanElement>;
 
 const interpolationZoomStep = 0.1;
 
-const socket = new io();
+const socket: Socket<ServerToClientsEvents, ClientToServerEvents> = io();
 
-const canvas = document.querySelector('.gameCanvas'),
-	context = canvas.getContext('2d');
+const canvas = document.querySelector('.gameCanvas') as HTMLCanvasElement,
+	context = canvas.getContext('2d') as CanvasRenderingContext2D;
 
-let canvasWidth,
-	canvasHeight,
-	mouseX = 0,
-	mouseY = 0,
-	mapWidth,
-	mapHeight;
+let canvasWidth: number,
+	canvasHeight: number,
+	mouseX: number = 0,
+	mouseY: number = 0,
+	mapWidth: number,
+	mapHeight: number;
 
 const canvasResizeObserver = new ResizeObserver(() => resampleCanvas());
 canvasResizeObserver.observe(canvas);
 
-function resampleCanvas() {
+function resampleCanvas(): void {
 	canvasWidth = window.innerWidth;
 	canvasHeight = window.innerHeight;
 	canvas.width = canvasWidth;
@@ -43,14 +55,14 @@ function resampleCanvas() {
 
 resampleCanvas();
 
-let inGame = false;
+let inGame: boolean = false;
 
-let player,
-	actualZoom = 0,
-	players = [],
-	foods = [];
+let player: PlayerCellMessage | undefined,
+	actualZoom: number = 0,
+	players: PlayerCellMessage[] = [],
+	foods: FoodCellMessage[] = [];
 
-function drawGrid() {
+function drawGrid(): void {
 	context.beginPath();
 	context.strokeStyle = 'gray';
 	context.lineWidth = 0.05;
@@ -66,7 +78,7 @@ function drawGrid() {
 	context.closePath();
 }
 
-function drawFood(food) {
+function drawFood(food: FoodCellMessage): void {
 	context.beginPath();
 	context.fillStyle = food.color;
 	context.arc(food.pos.x, food.pos.y, food.radius, 0, 2 * Math.PI, false);
@@ -74,7 +86,7 @@ function drawFood(food) {
 	context.closePath();
 }
 
-function drawPlayer(p) {
+function drawPlayer(p: PlayerCellMessage): void {
 	context.beginPath();
 	if (color != undefined) {
 		context.strokeStyle = color;
@@ -97,7 +109,7 @@ function drawPlayer(p) {
 	context.closePath();
 }
 
-function render() {
+function render(): void {
 	context.clearRect(0, 0, canvasWidth, canvasHeight);
 	context.save();
 	context.translate(canvasWidth / 2, canvasHeight / 2);
@@ -122,12 +134,13 @@ socket.on('allowConnection', mapSize => {
 socket.on('joined', () => {
 	inGame = true;
 });
+
 let finalScore = 0;
 socket.on('dead', () => {
 	endGameMenu.classList.remove('hideMenu');
 	leaderBoard.classList.add('hideDisplays');
 	score.classList.add('hideDisplays');
-	endGameData(finalScore);
+	endGameData(`${finalScore}`);
 	inGame = false;
 });
 
@@ -137,9 +150,9 @@ socket.on('updateGame', game => {
 	});
 	foods = game.foods;
 	player = players.find(p => p.socketId == socket.id);
-	if (player != undefined) {
-		refreshScore(player.score);
-		refreshLeaderBoard();
+	if (inGame && player != undefined) {
+		refreshScore(`${player.score}`);
+		refreshLeaderBoard(player);
 		finalScore = player.score;
 	}
 });
@@ -200,7 +213,8 @@ canvas.addEventListener('mousemove', event => {
 		mouseY = event.clientY - canvasHeight / 2;
 	}
 });
-let color;
+
+let color: string | undefined;
 for (let i = 0; i < colorChoice.length; i++) {
 	let element = colorChoice[i];
 	element.addEventListener('click', event => {
@@ -224,7 +238,7 @@ setInterval(() => {
 }, 1000 / 30);
 
 setInterval(() => {
-	if (inGame) {
+	if (inGame && player != undefined) {
 		/*actualZoom =
 			Math.round(
 				interpolate(actualZoom, player.zoom, interpolationZoomStep) * 100
@@ -234,7 +248,11 @@ setInterval(() => {
 	}
 }, 1000 / 60);
 
-function refreshLeaderBoard() {
+const bodyBoard = document.querySelector(
+	'.bodyBoard'
+) as HTMLTableSectionElement;
+
+function refreshLeaderBoard(player: PlayerCellMessage): void {
 	const orderedPlayers = players.slice(0, players.length).reverse();
 	let leaderBoard = '';
 	const playerIndex = orderedPlayers.findIndex(
@@ -246,18 +264,20 @@ function refreshLeaderBoard() {
 		}.${p.name}</td></tr>`;
 	});
 	if (playerIndex >= 10)
-		leaderBoard += `<tr><td>${playerIndex}.${player.name}</td></tr>`;
-	document.querySelector('.bodyBoard').innerHTML = leaderBoard;
+		leaderBoard += `<tr><td class="me">${playerIndex}.${player.name}</td></tr>`;
+	bodyBoard.innerHTML = leaderBoard;
 }
 
-function refreshScore(score) {
-	document.querySelector('.score').innerHTML = score;
+const scoreDisplay = document.querySelector('.score') as HTMLSpanElement;
+function refreshScore(score: string): void {
+	scoreDisplay.innerHTML = score;
 }
 
 const timeSurvived = document.querySelector('.time');
 const eatenFood = document.querySelector('.eaten');
-const pointsGained = document.querySelector('.points');
-function endGameData(score) {
+const pointsGained = document.querySelector('.points') as HTMLLIElement;
+
+function endGameData(score: string): void {
 	pointsGained.innerHTML = score;
 	//timeSurvived.innerHTML = Math.round(time / 30);
 }

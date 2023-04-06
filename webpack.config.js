@@ -2,7 +2,7 @@ import path from 'path';
 
 export default {
 	// Fichier d'entrée :
-	entry: './client/src/main.js',
+	entry: './client/src/main.ts',
 	// Fichier de sortie :
 	output: {
 		path: path.resolve(process.cwd(), './client/public/build'),
@@ -15,26 +15,26 @@ export default {
 	module: {
 		rules: [
 			{
-				test: /\.js$/, // tous les fichiers js ...
-				//test: /\.(ts|js)$/, // tous les fichiers js ou ts ...
+				//test: /\.js$/, // tous les fichiers js ...
+				test: /\.(ts|js)$/, // tous les fichiers js ou ts ...
 				exclude: /node_modules/, // ... sauf le dossier node_modules ...
 				use: {
 					// ... seront compilés par babel !
-					loader: 'babel-loader',
+					//loader: 'babel-loader',
 
 					// ... seront compilés par tsc !
-					/*loader: 'ts-loader',
+					loader: 'ts-loader',
 					options: {
 						configFile: 'tsconfig.client.json',
-					},*/
+					},
 				},
-				type: 'javascript/esm', // permet l'utilisation des modules ES6
+				//type: 'javascript/esm', // permet l'utilisation des modules ES6
 			},
 		],
 	},
-	/*resolve: {
+	resolve: {
 		extensions: ['.ts', '.js'],
-	},*/
+	},
 	devtool: 'source-map',
 	devServer: {
 		hot: false, // désactivation hot-reload (inutilisé)

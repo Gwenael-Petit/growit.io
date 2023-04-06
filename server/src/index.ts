@@ -4,25 +4,10 @@ import fs from 'fs';
 import addWebpackMiddleware from './addWebpackMiddleware';
 import { Server as IOServer } from 'socket.io';
 import Game from './Game';
-import PlayerCell from './PlayerCell';
-import FoodCell from './FoodCell';
-
-type DirectionMessage = { socketId: string; x: number; y: number };
-type AllowConnectionMessage = { width: number; height: number };
-type UpdateGameMessage = { players: PlayerCell[]; foods: FoodCell[] };
-
-interface ServerToClientsEvents {
-	allowConnection: (size: AllowConnectionMessage) => void;
-	joined: () => void;
-	dead: () => void;
-	updateGame: (game: UpdateGameMessage) => void;
-}
-
-interface ClientToServerEvents {
-	join: (name: string) => void;
-	setDirection: (direction: DirectionMessage) => void;
-	getLeaderboard: () => void;
-}
+import {
+	ClientToServerEvents,
+	ServerToClientsEvents,
+} from '../../common/socketInterfaces';
 
 const app = express();
 
