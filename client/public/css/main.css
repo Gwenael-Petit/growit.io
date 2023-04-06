@@ -321,29 +321,6 @@ img{
   .color-selected{
     border: 1px #fff solid;
   }
-  
-  /* Couleurs pour les ronds */
-  .color-picker[color="red"] {
-    background-color: red;
-  }
-  .color-picker[color="yellow"] {
-    background-color: yellow;
-  }
-  .color-picker[color="green"] {
-    background-color: green;
-  }
-  .color-picker[color="orange"] {
-    background-color: orange;
-  }
-  .color-picker[color="blue"] {
-    background-color: blue;
-  }
-  .color-picker[color="purple"] {
-    background-color: purple;
-  }
-  .color-picker[color="lightblue"] {
-    background-color: aqua;
-  }
 
   .color-picker-select{
     margin: 10px;

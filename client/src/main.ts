@@ -211,6 +211,7 @@ canvas.addEventListener('mousemove', event => {
 
 let selectedColor: string = 'red';
 colorPicker.forEach(c => {
+	c.style.backgroundColor = c.getAttribute('color') || 'red';
 	c.addEventListener('click', event => {
 		event.preventDefault();
 		colorPicker.forEach(element => element.classList.remove('color-selected'));
