@@ -4,7 +4,7 @@ import Colors from './Colors';
 
 export default class Game {
 	players: PlayerCell[] = [];
-	deadQueue: string[] = [];
+	deadQueue: PlayerCell[] = [];
 	foods: FoodCell[] = [];
 	static width: number = 100;
 	static height: number = 100;
@@ -62,12 +62,11 @@ export default class Game {
 			}
 		});
 		for (let i = this.players.length - 1; i >= 0; i--) {
+			const player = this.players[i];
 			for (const other of this.players) {
-				if (
-					this.players[i].socketId != other.socketId &&
-					other.canEatCell(this.players[i])
-				) {
-					this.deadQueue.push(this.players[i].socketId);
+				if (player.socketId != other.socketId && other.canEatCell(player)) {
+					this.deadQueue.push(player);
+					player.deathTimeStamp = new Date().getTime();
 					this.players.splice(i, 1);
 					break;
 				}

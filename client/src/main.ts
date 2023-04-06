@@ -11,7 +11,7 @@ import {
 const mainMenu = document.querySelector('.menu') as HTMLDivElement;
 const playButton = document.querySelector('.play') as HTMLButtonElement;
 const leaderBoard = document.querySelector('.leaderBoard') as HTMLDivElement;
-const score = document.querySelector('.score-bubble') as HTMLDivElement;
+const scoreBubble = document.querySelector('.score-bubble') as HTMLDivElement;
 const loginForm = document.querySelector('.loginForm') as HTMLFormElement;
 const nameInput = loginForm.querySelector(
 	'input[type=text]'
@@ -130,13 +130,12 @@ socket.on('joined', () => {
 	inGame = true;
 });
 
-let finalScore = 0;
-socket.on('dead', () => {
+socket.on('dead', ({ score, joinTimeStamp, deathTimeStamp }) => {
+	inGame = false;
 	endGameMenu.classList.remove('hideMenu');
 	leaderBoard.classList.add('hideDisplays');
-	score.classList.add('hideDisplays');
-	endGameData(`${finalScore}`);
-	inGame = false;
+	scoreBubble.classList.add('hideDisplays');
+	endGameData(score, new Date(deathTimeStamp - joinTimeStamp));
 });
 
 socket.on('updateGame', game => {
@@ -148,7 +147,6 @@ socket.on('updateGame', game => {
 	if (inGame && player != undefined) {
 		refreshScore(`${player.score}`);
 		refreshLeaderBoard(player);
-		finalScore = player.score;
 	}
 });
 
@@ -158,18 +156,16 @@ playButton.addEventListener('click', event => {
 	event.preventDefault();
 	mainMenu.classList.add('hideMenu');
 	leaderBoard.classList.remove('hideDisplays');
-	score.classList.remove('hideDisplays');
+	scoreBubble.classList.remove('hideDisplays');
 	socket.emit('join', { name: nameInput.value, color: selectedColor });
-	//time = 0;
 });
 
 playAgain.addEventListener('click', event => {
 	event.preventDefault();
 	endGameMenu.classList.add('hideMenu');
 	leaderBoard.classList.remove('hideDisplays');
-	score.classList.remove('hideDisplays');
+	scoreBubble.classList.remove('hideDisplays');
 	socket.emit('join', { name: nameInput.value, color: selectedColor });
-	//time = 0;
 });
 
 scoreLink.addEventListener('click', event => {
@@ -228,7 +224,6 @@ setInterval(() => {
 			y: mouseY,
 		});
 	}
-	//time++;
 }, 1000 / 30);
 
 setInterval(() => {
@@ -263,17 +258,19 @@ function refreshLeaderBoard(player: PlayerCellMessage): void {
 }
 
 const scoreDisplay = document.querySelector('.score') as HTMLSpanElement;
+
 function refreshScore(score: string): void {
 	scoreDisplay.innerHTML = score;
 }
 
-const timeSurvived = document.querySelector('.time');
-const eatenFood = document.querySelector('.eaten');
+const timeSurvived = document.querySelector('.time') as HTMLLIElement;
+const eatenFood = document.querySelector('.eaten') as HTMLLIElement;
 const pointsGained = document.querySelector('.points') as HTMLLIElement;
 
-function endGameData(score: string): void {
-	pointsGained.innerHTML = score;
-	//timeSurvived.innerHTML = Math.round(time / 30);
+function endGameData(score: number, timeAlive: Date): void {
+	console.log(timeAlive);
+	timeSurvived.innerHTML = `${timeAlive.getMinutes()}m:${timeAlive.getSeconds()}s`;
+	eatenFood.innerHTML = `${score}`;
 }
 
 /*function interpolate(actual, goal, t) {

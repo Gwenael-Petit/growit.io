@@ -3,12 +3,13 @@ import {
 	UpdateGameMessage,
 	DirectionMessage,
 	PlayerJoinMessage,
+	PlayerDeathMessage,
 } from './socketMessages';
 
 export interface ServerToClientsEvents {
 	allowConnection: (size: AllowConnectionMessage) => void;
 	joined: () => void;
-	dead: () => void;
+	dead: (message: PlayerDeathMessage) => void;
 	updateGame: (game: UpdateGameMessage) => void;
 }
 

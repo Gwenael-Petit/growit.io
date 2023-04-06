@@ -4,11 +4,14 @@ import Game from './Game';
 
 export default class PlayerCell extends Cell {
 	dir: Vec2D = new Vec2D(0, 0);
-	speed: number;
+	speed: number = 0;
 	score: number;
 	socketId: string;
 	name: string;
-	zoom: number;
+	zoom: number = 0;
+
+	joinTimeStamp: number = new Date().getTime();
+	deathTimeStamp: number = 0;
 
 	constructor(
 		x: number,
@@ -22,8 +25,6 @@ export default class PlayerCell extends Cell {
 		this.score = score;
 		this.socketId = socketId;
 		this.name = name;
-		this.speed = 0;
-		this.zoom = 0;
 	}
 
 	setDirection(x: number, y: number): void {

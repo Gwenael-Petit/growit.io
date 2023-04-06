@@ -53,7 +53,9 @@ httpServer.listen(port, () => {
 
 setInterval(() => {
 	for (let i = game.deadQueue.length - 1; i >= 0; i--) {
-		io.sockets.sockets.get(game.deadQueue[i])?.emit('dead');
+		io.sockets.sockets
+			.get(game.deadQueue[i].socketId)
+			?.emit('dead', game.deadQueue[i]);
 		game.deadQueue.splice(i, 1);
 	}
 

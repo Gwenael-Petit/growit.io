@@ -294,10 +294,6 @@ select {
     content: 'Temps survécu: ';
 }
 
-.time::after{
-    content: ' s';
-}
-
 .eaten::before{
     content: 'Boules mangés: ';
 }
