@@ -28,13 +28,13 @@ io.on('connection', socket => {
 		height: Game.height,
 	});
 
-	socket.on('disconnect', reason => {
+	socket.on('disconnect', () => {
 		console.log(`Déconnection du client ${socket.id}`);
 		game.disconnect(socket.id);
 	});
 
-	socket.on('join', name => {
-		if (game.join(socket.id, name)) socket.emit('joined');
+	socket.on('join', msg => {
+		if (game.join(socket.id, msg.name, msg.color)) socket.emit('joined');
 	});
 
 	socket.on('getLeaderboard', () => {});

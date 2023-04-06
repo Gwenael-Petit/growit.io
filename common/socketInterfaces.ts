@@ -2,6 +2,7 @@ import {
 	AllowConnectionMessage,
 	UpdateGameMessage,
 	DirectionMessage,
+	PlayerJoinMessage,
 } from './socketMessages';
 
 export interface ServerToClientsEvents {
@@ -12,7 +13,7 @@ export interface ServerToClientsEvents {
 }
 
 export interface ClientToServerEvents {
-	join: (name: string) => void;
+	join: (join: PlayerJoinMessage) => void;
 	setDirection: (direction: DirectionMessage) => void;
 	getLeaderboard: () => void;
 }

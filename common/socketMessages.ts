@@ -1,5 +1,6 @@
 import Vec2D from './Vec2D';
 
+export type PlayerJoinMessage = { name: string; color: string };
 export type DirectionMessage = { socketId: string; x: number; y: number };
 export type AllowConnectionMessage = { width: number; height: number };
 export type UpdateGameMessage = {

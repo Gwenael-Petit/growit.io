@@ -25,7 +25,7 @@ const backToMenuEndGame = document.querySelector('.menu2') as HTMLAnchorElement;
 const backToMenuCredits = document.querySelector('.menu3') as HTMLAnchorElement;
 const creditsLink = document.querySelector('.creditsLink') as HTMLAnchorElement;
 const credits = document.querySelector('.credits') as HTMLDivElement;
-const colorChoice = document.querySelectorAll(
+const colorPicker = document.querySelectorAll(
 	'.color-picker'
 ) as NodeListOf<HTMLSpanElement>;
 
@@ -88,13 +88,8 @@ function drawFood(food: FoodCellMessage): void {
 
 function drawPlayer(p: PlayerCellMessage): void {
 	context.beginPath();
-	if (color != undefined) {
-		context.strokeStyle = color;
-		context.fillStyle = color;
-	} else {
-		context.strokeStyle = p.color;
-		context.fillStyle = p.color;
-	}
+	context.strokeStyle = p.color;
+	context.fillStyle = p.color;
 
 	context.arc(p.pos.x, p.pos.y, p.radius, 0, 2 * Math.PI, false);
 	context.fill();
@@ -164,7 +159,7 @@ playButton.addEventListener('click', event => {
 	mainMenu.classList.add('hideMenu');
 	leaderBoard.classList.remove('hideDisplays');
 	score.classList.remove('hideDisplays');
-	socket.emit('join', nameInput.value);
+	socket.emit('join', { name: nameInput.value, color: selectedColor });
 	//time = 0;
 });
 
@@ -173,7 +168,7 @@ playAgain.addEventListener('click', event => {
 	endGameMenu.classList.add('hideMenu');
 	leaderBoard.classList.remove('hideDisplays');
 	score.classList.remove('hideDisplays');
-	socket.emit('join', nameInput.value);
+	socket.emit('join', { name: nameInput.value, color: selectedColor });
 	//time = 0;
 });
 
@@ -214,17 +209,15 @@ canvas.addEventListener('mousemove', event => {
 	}
 });
 
-let color: string | undefined;
-for (let i = 0; i < colorChoice.length; i++) {
-	let element = colorChoice[i];
-	element.addEventListener('click', event => {
+let selectedColor: string = 'red';
+colorPicker.forEach(c => {
+	c.addEventListener('click', event => {
 		event.preventDefault();
-		colorChoice.forEach(element => element.classList.remove('color-selected'));
-		element.classList.add('color-selected');
-		console.log(element.classList[1]);
-		color = element.classList[1];
+		colorPicker.forEach(element => element.classList.remove('color-selected'));
+		c.classList.add('color-selected');
+		selectedColor = c.getAttribute('color') || 'red';
 	});
-}
+});
 
 setInterval(() => {
 	if (inGame) {

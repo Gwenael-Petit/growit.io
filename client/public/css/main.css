@@ -323,26 +323,25 @@ img{
   }
   
   /* Couleurs pour les ronds */
-  .color-picker.red {
+  .color-picker[color="red"] {
     background-color: red;
   }
-  .color-picker.yellow {
+  .color-picker[color="yellow"] {
     background-color: yellow;
   }
-  .color-picker.green {
+  .color-picker[color="green"] {
     background-color: green;
   }
-  .color-picker.orange {
+  .color-picker[color="orange"] {
     background-color: orange;
   }
-  .color-picker.blue {
+  .color-picker[color="blue"] {
     background-color: blue;
   }
-  .color-picker.purple {
+  .color-picker[color="purple"] {
     background-color: purple;
   }
-
-  .color-picker.lightblue{
+  .color-picker[color="lightblue"] {
     background-color: aqua;
   }
 

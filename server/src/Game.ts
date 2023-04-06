@@ -31,14 +31,14 @@ export default class Game {
 		);
 	}
 
-	join(socketId: string, name: string): boolean {
+	join(socketId: string, name: string, color: string): boolean {
 		if (this.players.find(p => p.socketId == socketId) != undefined)
 			return false;
 		this.players.push(
 			new PlayerCell(
 				Math.random() * Game.width - Game.width / 2,
 				Math.random() * Game.height - Game.height / 2,
-				Colors.randomColor(),
+				color,
 				10,
 				socketId,
 				name
