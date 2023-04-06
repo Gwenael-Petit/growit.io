@@ -12,6 +12,10 @@ const scoreLink = document.querySelector('.scoreLink');
 const scoreTable = document.querySelector('.scoreTable');
 const backToMenuScore = document.querySelector('.menu1');
 const backToMenuEndGame = document.querySelector('.menu2');
+const backToMenuCredits = document.querySelector('.menu3');
+const creditsLink = document.querySelector('.creditsLink');
+const credits = document.querySelector('.credits');
+const colorChoice = document.querySelectorAll('.color-picker');
 
 const interpolationZoomStep = 0.1;
 
@@ -72,8 +76,14 @@ function drawFood(food) {
 
 function drawPlayer(p) {
 	context.beginPath();
-	context.strokeStyle = p.color;
-	context.fillStyle = p.color;
+	if (color != undefined) {
+		context.strokeStyle = color;
+		context.fillStyle = color;
+	} else {
+		context.strokeStyle = p.color;
+		context.fillStyle = p.color;
+	}
+
 	context.arc(p.pos.x, p.pos.y, p.radius, 0, 2 * Math.PI, false);
 	context.fill();
 	context.stroke();
@@ -111,10 +121,7 @@ socket.on('allowConnection', mapSize => {
 
 socket.on('joined', () => {
 	inGame = true;
-	time = 0;
 });
-
-let time = 0;
 let finalScore = 0;
 socket.on('dead', () => {
 	endGameMenu.classList.remove('hideMenu');
@@ -145,7 +152,7 @@ playButton.addEventListener('click', event => {
 	leaderBoard.classList.remove('hideDisplays');
 	score.classList.remove('hideDisplays');
 	socket.emit('join', nameInput.value);
-	time = 0;
+	//time = 0;
 });
 
 playAgain.addEventListener('click', event => {
@@ -154,7 +161,7 @@ playAgain.addEventListener('click', event => {
 	leaderBoard.classList.remove('hideDisplays');
 	score.classList.remove('hideDisplays');
 	socket.emit('join', nameInput.value);
-	time = 0;
+	//time = 0;
 });
 
 scoreLink.addEventListener('click', event => {
@@ -175,12 +182,35 @@ backToMenuEndGame.addEventListener('click', event => {
 	endGameMenu.classList.add('hideMenu');
 });
 
+creditsLink.addEventListener('click', event => {
+	event.preventDefault();
+	credits.classList.remove('hideMenu');
+	mainMenu.classList.add('hideMenu');
+});
+
+backToMenuCredits.addEventListener('click', event => {
+	event.preventDefault();
+	mainMenu.classList.remove('hideMenu');
+	credits.classList.add('hideMenu');
+});
+
 canvas.addEventListener('mousemove', event => {
 	if (inGame) {
 		mouseX = event.clientX - canvasWidth / 2;
 		mouseY = event.clientY - canvasHeight / 2;
 	}
 });
+let color;
+for (let i = 0; i < colorChoice.length; i++) {
+	let element = colorChoice[i];
+	element.addEventListener('click', event => {
+		event.preventDefault();
+		colorChoice.forEach(element => element.classList.remove('color-selected'));
+		element.classList.add('color-selected');
+		console.log(element.classList[1]);
+		color = element.classList[1];
+	});
+}
 
 setInterval(() => {
 	if (inGame) {
@@ -190,8 +220,7 @@ setInterval(() => {
 			y: mouseY,
 		});
 	}
-	time++;
-	console.log(Math.round(time / 30));
+	//time++;
 }, 1000 / 30);
 
 setInterval(() => {
@@ -230,7 +259,7 @@ const eatenFood = document.querySelector('.eaten');
 const pointsGained = document.querySelector('.points');
 function endGameData(score) {
 	pointsGained.innerHTML = score;
-	timeSurvived.innerHTML = Math.round(time / 30);
+	//timeSurvived.innerHTML = Math.round(time / 30);
 }
 
 /*function interpolate(actual, goal, t) {

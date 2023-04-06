@@ -207,6 +207,14 @@ select {
     flex-direction: row;
 }
 
+.Valentin {
+    padding: 0 20px;
+}
+
+.Gwenael{
+    padding: 0 20px;
+}
+
 .endGame{
     background-image: linear-gradient(45deg, #111,#333 );
     border-radius: 5px;
@@ -283,15 +291,19 @@ select {
 }
 
 .time::before{
-    content: 'Temps survécu:';
+    content: 'Temps survécu: ';
+}
+
+.time::after{
+    content: ' s';
 }
 
 .eaten::before{
-    content: 'Boules mangés:';
+    content: 'Boules mangés: ';
 }
 
 .points::before{
-    content: 'Score:';
+    content: 'Score: ';
 }
 
 img{
@@ -307,7 +319,7 @@ img{
   }
 
   .color-selected{
-    border: 1px #fff;
+    border: 1px #fff solid;
   }
   
   /* Couleurs pour les ronds */
@@ -375,6 +387,26 @@ img{
   }
 
   .playAgain:hover{
+    background-color: #444;
+    border: 2px solid;
+    border-color: red;
+    padding: 8px;
+    max-width: 200px;
+  }
+
+  .creditsLink{
+    display: block;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    max-width: 200px;
+  }
+
+  .creditsLink:hover{
     background-color: #444;
     border: 2px solid;
     border-color: red;
