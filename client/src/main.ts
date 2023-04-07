@@ -89,9 +89,14 @@ function drawFood(food: FoodCellMessage): void {
 function drawPlayer(p: PlayerCellMessage): void {
 	context.beginPath();
 	context.fillStyle = p.color;
-
 	context.arc(p.pos.x, p.pos.y, p.radius, 0, 2 * Math.PI, false);
 	context.fill();
+
+	if (!p.vulnerable) {
+		context.lineWidth = 0.5;
+		context.strokeStyle = 'greenyellow';
+		context.stroke();
+	}
 
 	context.textAlign = 'center';
 	context.fillStyle = 'white';
@@ -110,7 +115,7 @@ function render(): void {
 		context.scale(actualZoom, actualZoom);
 		context.translate(-player.pos.x, -player.pos.y);
 	} else {
-		context.scale(20, 20);
+		context.scale(10, 10);
 	}
 	drawGrid();
 	foods.forEach(f => drawFood(f));
