@@ -9,6 +9,7 @@ export default class PlayerCell extends Cell {
 	socketId: string;
 	name: string;
 	zoom: number = 0;
+	vulnerable: boolean = false;
 
 	joinTimeStamp: number = new Date().getTime();
 	deathTimeStamp: number = 0;
@@ -65,6 +66,7 @@ export default class PlayerCell extends Cell {
 	}
 
 	eatCell(cell: Cell): void {
+		if (!this.vulnerable) this.vulnerable = true;
 		const area = Math.PI * Math.pow(this.radius, 2);
 		const cellArea = Math.PI * Math.pow(cell.radius, 2);
 		this.radius = Math.sqrt((area + cellArea) / Math.PI);

@@ -65,7 +65,11 @@ export default class Game {
 		for (let i = this.players.length - 1; i >= 0; i--) {
 			const player = this.players[i];
 			for (const other of this.players) {
-				if (player.socketId != other.socketId && other.canEatCell(player)) {
+				if (
+					player.socketId != other.socketId &&
+					player.vulnerable &&
+					other.canEatCell(player)
+				) {
 					this.deadQueue.push(player);
 					player.deathTimeStamp = new Date().getTime();
 					player.score -= Game.defaultPlayerSize;

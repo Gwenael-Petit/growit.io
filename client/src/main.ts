@@ -88,12 +88,10 @@ function drawFood(food: FoodCellMessage): void {
 
 function drawPlayer(p: PlayerCellMessage): void {
 	context.beginPath();
-	context.strokeStyle = p.color;
 	context.fillStyle = p.color;
 
 	context.arc(p.pos.x, p.pos.y, p.radius, 0, 2 * Math.PI, false);
 	context.fill();
-	context.stroke();
 
 	context.textAlign = 'center';
 	context.fillStyle = 'white';

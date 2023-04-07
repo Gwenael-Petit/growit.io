@@ -20,5 +20,6 @@ export type PlayerCellMessage = {
 	score: number;
 	name: string;
 	zoom: number;
+	vulnerable: boolean;
 };
 export type FoodCellMessage = { pos: Vec2D; color: string; radius: number };
