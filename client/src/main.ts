@@ -97,7 +97,7 @@ function drawPlayer(p: PlayerCellMessage): void {
 		context.strokeStyle = 'greenyellow';
 		context.stroke();
 	}
-
+	context.lineWidth = 0.05;
 	context.textAlign = 'center';
 	context.fillStyle = 'white';
 	context.font = `bold ${p.radius * 0.5}px arial`;
