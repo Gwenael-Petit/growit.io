@@ -100,7 +100,7 @@ function drawPlayer(p: PlayerCellMessage): void {
 	context.lineWidth = 0.05;
 	context.textAlign = 'center';
 	context.fillStyle = 'white';
-	context.font = `bold ${p.radius * 0.5}px arial`;
+	context.font = `bold ${p.radius * 0.45}px arial`;
 	context.fillText(p.name, p.pos.x, p.pos.y + p.radius * 0.15);
 	context.strokeStyle = 'black';
 	context.strokeText(p.name, p.pos.x, p.pos.y + p.radius * 0.15);
@@ -160,7 +160,11 @@ playButton.addEventListener('click', event => {
 	mainMenu.classList.add('hideMenu');
 	leaderBoard.classList.remove('hideDisplays');
 	scoreBubble.classList.remove('hideDisplays');
-	socket.emit('join', { name: nameInput.value, color: selectedColor });
+	if (nameInput.value == '') {
+		socket.emit('join', { name: 'hagar', color: selectedColor });
+	} else {
+		socket.emit('join', { name: nameInput.value, color: selectedColor });
+	}
 });
 
 playAgain.addEventListener('click', event => {
