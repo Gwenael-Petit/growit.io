@@ -153,32 +153,50 @@ socket.on('updateGame', game => {
 	}
 });
 
+const topTenTBody = scoreTable.querySelector(
+	'tbody'
+) as HTMLTableSectionElement;
+
+socket.on('topTen', topTen => {
+	let html = '';
+	topTen.forEach(p => {
+		html += `<tr>
+			<td>${p.name}</td>
+			<td>${p.score}</td>
+			<td>${p.date}</td>
+		</tr>`;
+	});
+	topTenTBody.innerHTML = html;
+});
+
 render();
 
 playButton.addEventListener('click', event => {
 	event.preventDefault();
 	mainMenu.classList.add('hideMenu');
-	leaderBoard.classList.remove('hideDisplays');
-	scoreBubble.classList.remove('hideDisplays');
-	if (nameInput.value == '') {
-		socket.emit('join', { name: 'hagar', color: selectedColor });
-	} else {
-		socket.emit('join', { name: nameInput.value, color: selectedColor });
-	}
+	play();
 });
 
 playAgain.addEventListener('click', event => {
 	event.preventDefault();
 	endGameMenu.classList.add('hideMenu');
+	play();
+});
+
+function play(): void {
 	leaderBoard.classList.remove('hideDisplays');
 	scoreBubble.classList.remove('hideDisplays');
-	socket.emit('join', { name: nameInput.value, color: selectedColor });
-});
+	socket.emit('join', {
+		name: nameInput.value == '' ? "J'ai pas de nom" : nameInput.value,
+		color: selectedColor,
+	});
+}
 
 scoreLink.addEventListener('click', event => {
 	event.preventDefault();
 	scoreTable.classList.remove('hideMenu');
 	mainMenu.classList.add('hideMenu');
+	socket.emit('getTopTen');
 });
 
 backToMenuScore.addEventListener('click', event => {

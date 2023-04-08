@@ -1,5 +1,5 @@
 import http from 'http';
-import express from 'express';
+import express, { json } from 'express';
 import fs from 'fs';
 import addWebpackMiddleware from './addWebpackMiddleware';
 import { Server as IOServer } from 'socket.io';
@@ -8,6 +8,7 @@ import {
 	ClientToServerEvents,
 	ServerToClientsEvents,
 } from '../../common/socketInterfaces';
+import TopTenPlayer from '../../common/TopTenPlayer';
 
 const app = express();
 
@@ -18,6 +19,11 @@ const httpServer = http.createServer(app);
 const io = new IOServer<ClientToServerEvents, ServerToClientsEvents>(
 	httpServer
 );
+
+if (!fs.existsSync('topTen.json')) {
+	console.log('Création du fichier topTen.json...');
+	fs.appendFileSync('topTen.json', '[]');
+}
 
 const game = new Game(500, 500);
 
@@ -37,7 +43,13 @@ io.on('connection', socket => {
 		if (game.join(socket.id, msg.name, msg.color)) socket.emit('joined');
 	});
 
-	socket.on('getLeaderboard', () => {});
+	socket.on('getTopTen', () => {
+		const fileContent: TopTenPlayer[] = JSON.parse(
+			fs.readFileSync('topTen.json').toString()
+		);
+
+		socket.emit('topTen', fileContent);
+	});
 
 	socket.on('setDirection', direction => {
 		game.setDirection(direction.socketId, direction.x, direction.y);

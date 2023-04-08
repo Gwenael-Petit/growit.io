@@ -1,3 +1,4 @@
+import TopTenPlayer from './TopTenPlayer';
 import {
 	AllowConnectionMessage,
 	UpdateGameMessage,
@@ -11,10 +12,11 @@ export interface ServerToClientsEvents {
 	joined: () => void;
 	dead: (message: PlayerDeathMessage) => void;
 	updateGame: (game: UpdateGameMessage) => void;
+	topTen: (topTen: TopTenPlayer[]) => void;
 }
 
 export interface ClientToServerEvents {
 	join: (join: PlayerJoinMessage) => void;
 	setDirection: (direction: DirectionMessage) => void;
-	getLeaderboard: () => void;
+	getTopTen: () => void;
 }
