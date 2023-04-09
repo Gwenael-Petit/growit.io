@@ -159,11 +159,11 @@ const topTenTBody = scoreTable.querySelector(
 
 socket.on('topTen', topTen => {
 	let html = '';
-	topTen.forEach(p => {
+	topTen.reverse().forEach(p => {
 		html += `<tr>
 			<td>${p.name}</td>
 			<td>${p.score}</td>
-			<td>${p.date}</td>
+			<td>${new Date(p.date).toLocaleDateString('fr')}</td>
 		</tr>`;
 	});
 	topTenTBody.innerHTML = html;

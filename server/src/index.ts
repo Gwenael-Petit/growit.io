@@ -8,7 +8,6 @@ import {
 	ClientToServerEvents,
 	ServerToClientsEvents,
 } from '../../common/socketInterfaces';
-import TopTenPlayer from '../../common/TopTenPlayer';
 
 const app = express();
 
@@ -20,12 +19,14 @@ const io = new IOServer<ClientToServerEvents, ServerToClientsEvents>(
 	httpServer
 );
 
-if (!fs.existsSync('topTen.json')) {
-	console.log('Création du fichier topTen.json...');
-	fs.appendFileSync('topTen.json', '[]');
+const topTenFile: string = 'topTen.json';
+
+if (!fs.existsSync(topTenFile)) {
+	console.log(`Création du fichier ${topTenFile}...`);
+	fs.appendFileSync(topTenFile, '[]');
 }
 
-const game = new Game(500, 500);
+const game = new Game(500, 500, topTenFile);
 
 io.on('connection', socket => {
 	console.log(`Nouvelle connexion du client ${socket.id}`);
@@ -44,11 +45,7 @@ io.on('connection', socket => {
 	});
 
 	socket.on('getTopTen', () => {
-		const fileContent: TopTenPlayer[] = JSON.parse(
-			fs.readFileSync('topTen.json').toString()
-		);
-
-		socket.emit('topTen', fileContent);
+		socket.emit('topTen', game.topTen);
 	});
 
 	socket.on('setDirection', direction => {

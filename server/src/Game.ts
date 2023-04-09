@@ -1,6 +1,7 @@
 import PlayerCell from './PlayerCell';
 import FoodCell from './FoodCell';
-import Colors from './Colors';
+import fs from 'fs';
+import TopTenPlayer from '../../common/TopTenPlayer';
 
 export default class Game {
 	static defaultPlayerSize: number = 10;
@@ -10,10 +11,14 @@ export default class Game {
 	static width: number = 100;
 	static height: number = 100;
 	maxFoods: number = 1000;
+	topTenFile: string;
+	topTen: TopTenPlayer[];
 
-	constructor(width: number, height: number) {
+	constructor(width: number, height: number, topTenFile: string) {
 		Game.width = width;
 		Game.height = height;
+		this.topTenFile = topTenFile;
+		this.topTen = JSON.parse(fs.readFileSync(topTenFile).toString());
 	}
 
 	respawnFood(): void {
@@ -49,8 +54,15 @@ export default class Game {
 	}
 
 	disconnect(socketId: string): void {
-		const idx = this.players.findIndex(player => player.socketId == socketId);
-		if (idx >= 0) this.players.splice(idx, 1);
+		for (let i = this.players.length - 1; i >= 0; i--) {
+			const player = this.players[i];
+			if (player.socketId == socketId) {
+				this.insertInTopTen(player);
+				this.players.splice(i, 1);
+			}
+		}
+		//const idx = this.players.findIndex(player => player.socketId == socketId);
+		//if (idx >= 0) this.players.splice(idx, 1);
 	}
 
 	update(): void {
@@ -73,6 +85,7 @@ export default class Game {
 					this.deadQueue.push(player);
 					player.deathTimeStamp = new Date().getTime();
 					player.score -= Game.defaultPlayerSize;
+					this.insertInTopTen(player);
 					this.players.splice(i, 1);
 					break;
 				}
@@ -83,5 +96,24 @@ export default class Game {
 	setDirection(socketId: string, x: number, y: number): void {
 		const p = this.players.find(p => p.socketId == socketId);
 		if (p != undefined) p.setDirection(x, y);
+	}
+
+	insertInTopTen(player: PlayerCell): void {
+		if (this.topTen.length < 9 || player.score > this.topTen[0].score) {
+			this.topTen.push({
+				name: player.name,
+				score: player.score,
+				date: new Date().getTime(),
+			});
+			this.topTen.sort((a, b) => {
+				return a.score - b.score;
+			});
+			if (this.topTen.length > 10) this.topTen.shift();
+			this.saveTopTenFile();
+		}
+	}
+
+	saveTopTenFile(): void {
+		fs.writeFileSync(this.topTenFile, JSON.stringify(this.topTen));
 	}
 }
