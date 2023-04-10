@@ -8,15 +8,15 @@ export default class Game {
 	players: PlayerCell[] = [];
 	deadQueue: PlayerCell[] = [];
 	foods: FoodCell[] = [];
-	static width: number = 100;
-	static height: number = 100;
+	width: number = 100;
+	height: number = 100;
 	maxFoods: number = 1000;
 	topTenFile: string;
 	topTen: TopTenPlayer[];
 
 	constructor(width: number, height: number, topTenFile: string) {
-		Game.width = width;
-		Game.height = height;
+		this.width = width;
+		this.height = height;
 		this.topTenFile = topTenFile;
 		this.topTen = JSON.parse(fs.readFileSync(topTenFile).toString());
 	}
@@ -31,8 +31,8 @@ export default class Game {
 	spawnFood(): void {
 		this.foods.push(
 			new FoodCell(
-				Math.random() * Game.width - Game.width / 2,
-				Math.random() * Game.height - Game.height / 2
+				Math.random() * this.width - this.width / 2,
+				Math.random() * this.height - this.height / 2
 			)
 		);
 	}
@@ -42,8 +42,8 @@ export default class Game {
 			return false;
 		this.players.push(
 			new PlayerCell(
-				Math.random() * Game.width - Game.width / 2,
-				Math.random() * Game.height - Game.height / 2,
+				Math.random() * this.width - this.width / 2,
+				Math.random() * this.height - this.height / 2,
 				color,
 				Game.defaultPlayerSize,
 				socketId,
@@ -67,7 +67,7 @@ export default class Game {
 
 	update(): void {
 		this.players.forEach(player => {
-			player.update();
+			player.update(this.width, this.height);
 			for (let i = this.foods.length - 1; i >= 0; i--) {
 				if (player.canEatCell(this.foods[i])) {
 					this.foods.splice(i, 1);

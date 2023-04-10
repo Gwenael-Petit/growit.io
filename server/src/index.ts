@@ -31,8 +31,8 @@ const game = new Game(500, 500, topTenFile);
 io.on('connection', socket => {
 	console.log(`Nouvelle connexion du client ${socket.id}`);
 	socket.emit('allowConnection', {
-		width: Game.width,
-		height: Game.height,
+		width: game.width,
+		height: game.height,
 	});
 
 	socket.on('disconnect', () => {

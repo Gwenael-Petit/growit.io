@@ -33,11 +33,11 @@ export default class PlayerCell extends Cell {
 		this.dir.y = y;
 	}
 
-	update(): void {
+	update(mapWidth: number, mapHeight: number): void {
 		this.updateScore();
 		this.updateZoom();
 		this.updateSpeed();
-		this.move();
+		this.move(mapWidth, mapHeight);
 	}
 
 	updateScore(): void {
@@ -53,7 +53,7 @@ export default class PlayerCell extends Cell {
 		this.zoom = 48 / Math.sqrt(this.radius);
 	}
 
-	move(): void {
+	move(mapWidth: number, mapHeight: number): void {
 		const len = this.dir.length();
 		const vec = this.dir.normalize();
 		vec.multiply(this.speed);
@@ -62,7 +62,7 @@ export default class PlayerCell extends Cell {
 			vec.multiply(1 - (displayRadius - len) / displayRadius);
 		}
 		this.pos.add(vec);
-		this.returnInMapIfIsOut();
+		this.returnInMapIfIsOut(mapWidth, mapHeight);
 	}
 
 	eatCell(cell: Cell): void {
@@ -84,19 +84,19 @@ export default class PlayerCell extends Cell {
 		return false;
 	}
 
-	returnInMapIfIsOut(): void {
+	returnInMapIfIsOut(mapWidth: number, mapHeight: number): void {
 		const radius30Percent = this.radius * 0.3;
-		if (this.pos.x <= -Game.width / 2 + radius30Percent) {
-			this.pos.x = -Game.width / 2 + radius30Percent;
+		if (this.pos.x <= -mapWidth / 2 + radius30Percent) {
+			this.pos.x = -mapWidth / 2 + radius30Percent;
 		}
-		if (this.pos.x >= Game.width / 2 - radius30Percent) {
-			this.pos.x = Game.width / 2 - radius30Percent;
+		if (this.pos.x >= mapWidth / 2 - radius30Percent) {
+			this.pos.x = mapWidth / 2 - radius30Percent;
 		}
-		if (this.pos.y <= -Game.height / 2 + radius30Percent) {
-			this.pos.y = -Game.height / 2 + radius30Percent;
+		if (this.pos.y <= -mapHeight / 2 + radius30Percent) {
+			this.pos.y = -mapHeight / 2 + radius30Percent;
 		}
-		if (this.pos.y >= Game.height / 2 - radius30Percent) {
-			this.pos.y = Game.height / 2 - radius30Percent;
+		if (this.pos.y >= mapHeight / 2 - radius30Percent) {
+			this.pos.y = mapHeight / 2 - radius30Percent;
 		}
 	}
 }
