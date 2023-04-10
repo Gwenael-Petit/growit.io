@@ -10,7 +10,7 @@ export default class Game {
 	foods: FoodCell[] = [];
 	width: number = 100;
 	height: number = 100;
-	maxFoods: number = 1000;
+	static maxFoods: number = 1000;
 	topTenFile: string;
 	topTen: TopTenPlayer[];
 
@@ -22,7 +22,7 @@ export default class Game {
 	}
 
 	respawnFood(): void {
-		const toSpawn = this.maxFoods - this.foods.length;
+		const toSpawn = Game.maxFoods - this.foods.length;
 		for (let i = 0; i < toSpawn; i++) {
 			this.spawnFood();
 		}
@@ -57,12 +57,12 @@ export default class Game {
 		for (let i = this.players.length - 1; i >= 0; i--) {
 			const player = this.players[i];
 			if (player.socketId == socketId) {
+				player.deathTimeStamp = new Date().getTime();
+				player.score -= Game.defaultPlayerSize;
 				this.insertInTopTen(player);
 				this.players.splice(i, 1);
 			}
 		}
-		//const idx = this.players.findIndex(player => player.socketId == socketId);
-		//if (idx >= 0) this.players.splice(idx, 1);
 	}
 
 	update(): void {
