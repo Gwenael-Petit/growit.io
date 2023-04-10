@@ -231,6 +231,10 @@ select {
     text-align: center;
 }
 
+ ul {
+    list-style-type: none;
+}
+
 .score-bubble{
     position:absolute;
     bottom: 20px;
