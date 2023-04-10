@@ -133,12 +133,12 @@ socket.on('joined', () => {
 	inGame = true;
 });
 
-socket.on('dead', ({ score, joinTimeStamp, deathTimeStamp }) => {
+socket.on('dead', ({ score, joinTimeStamp, deathTimeStamp, finalScore }) => {
 	inGame = false;
 	endGameMenu.classList.remove('hideMenu');
 	leaderBoard.classList.add('hideDisplays');
 	scoreBubble.classList.add('hideDisplays');
-	endGameData(score, new Date(deathTimeStamp - joinTimeStamp));
+	endGameData(score, new Date(deathTimeStamp - joinTimeStamp), finalScore);
 });
 
 socket.on('updateGame', game => {
@@ -148,7 +148,7 @@ socket.on('updateGame', game => {
 	foods = game.foods;
 	player = players.find(p => p.socketId == socket.id);
 	if (inGame && player != undefined) {
-		refreshScore(`${player.score}`);
+		refreshScore(`${player.finalScore}`);
 		refreshLeaderBoard(player);
 	}
 });
@@ -292,9 +292,11 @@ const timeSurvived = document.querySelector('.time') as HTMLLIElement;
 const eatenFood = document.querySelector('.eaten') as HTMLLIElement;
 const pointsGained = document.querySelector('.points') as HTMLLIElement;
 
-function endGameData(score: number, timeAlive: Date): void {
+function endGameData(score: number, timeAlive: Date, finalScore: number): void {
+	console.log(timeAlive);
 	timeSurvived.innerHTML = `${timeAlive.getMinutes()}m:${timeAlive.getSeconds()}s`;
 	eatenFood.innerHTML = `${score}`;
+	pointsGained.innerHTML = `${finalScore}`;
 }
 
 /*function interpolate(actual, goal, t) {

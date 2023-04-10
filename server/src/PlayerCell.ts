@@ -13,6 +13,7 @@ export default class PlayerCell extends Cell {
 
 	joinTimeStamp: number = new Date().getTime();
 	deathTimeStamp: number = 0;
+	finalScore: number = 0;
 
 	constructor(
 		x: number,
@@ -38,6 +39,7 @@ export default class PlayerCell extends Cell {
 		this.updateZoom();
 		this.updateSpeed();
 		this.move(mapWidth, mapHeight);
+		this.calculFinalScore();
 	}
 
 	updateScore(): void {
@@ -98,5 +100,11 @@ export default class PlayerCell extends Cell {
 		if (this.pos.y >= mapHeight / 2 - radius30Percent) {
 			this.pos.y = mapHeight / 2 - radius30Percent;
 		}
+	}
+
+	calculFinalScore() {
+		this.finalScore =
+			this.score * 5 +
+			new Date(Date.now() - this.joinTimeStamp).getSeconds() * 2;
 	}
 }

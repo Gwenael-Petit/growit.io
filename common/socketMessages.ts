@@ -5,6 +5,7 @@ export type PlayerDeathMessage = {
 	score: number;
 	joinTimeStamp: number;
 	deathTimeStamp: number;
+	finalScore: number;
 };
 export type DirectionMessage = { socketId: string; x: number; y: number };
 export type AllowConnectionMessage = { width: number; height: number };
@@ -13,6 +14,7 @@ export type UpdateGameMessage = {
 	foods: FoodCellMessage[];
 };
 export type PlayerCellMessage = {
+	finalScore: number;
 	socketId: string;
 	pos: Vec2D;
 	radius: number;
