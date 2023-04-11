@@ -39,7 +39,6 @@ export default class PlayerCell extends Cell {
 		this.updateZoom();
 		this.updateSpeed();
 		this.move(mapWidth, mapHeight);
-		this.calculFinalScore();
 	}
 
 	updateScore(): void {

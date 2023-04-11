@@ -66,11 +66,11 @@ function drawGrid(): void {
 	context.beginPath();
 	context.strokeStyle = 'gray';
 	context.lineWidth = 0.05;
-	for (let x = -mapWidth; x <= mapWidth; x += 5) {
+	for (let x = -mapWidth; x <= mapWidth; x += 10) {
 		context.moveTo(x, -mapHeight);
 		context.lineTo(x, mapHeight);
 	}
-	for (let y = -mapHeight; y <= mapHeight; y += 5) {
+	for (let y = -mapHeight; y <= mapHeight; y += 10) {
 		context.moveTo(-mapWidth, y);
 		context.lineTo(mapWidth, y);
 	}
@@ -148,7 +148,7 @@ socket.on('updateGame', game => {
 	foods = game.foods;
 	player = players.find(p => p.socketId == socket.id);
 	if (inGame && player != undefined) {
-		refreshScore(`${player.finalScore}`);
+		refreshScore(`${player.score}`);
 		refreshLeaderBoard(player);
 	}
 });
@@ -187,7 +187,7 @@ function play(): void {
 	leaderBoard.classList.remove('hideDisplays');
 	scoreBubble.classList.remove('hideDisplays');
 	socket.emit('join', {
-		name: nameInput.value == '' ? "J'ai pas de nom" : nameInput.value,
+		name: nameInput.value == '' ? 'Grolem' : nameInput.value,
 		color: selectedColor,
 	});
 }
