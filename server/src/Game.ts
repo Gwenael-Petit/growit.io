@@ -10,7 +10,7 @@ export default class Game {
 	foods: FoodCell[] = [];
 	width: number = 100;
 	height: number = 100;
-	static maxFoods: number = 1000;
+	static maxFoods: number = 600;
 	topTenFile: string;
 	topTen: TopTenPlayer[];
 
@@ -57,10 +57,7 @@ export default class Game {
 		for (let i = this.players.length - 1; i >= 0; i--) {
 			const player = this.players[i];
 			if (player.socketId == socketId) {
-				player.deathTimeStamp = new Date().getTime();
-				player.score -= Game.defaultPlayerSize;
-				this.insertInTopTen(player);
-				this.players.splice(i, 1);
+				this.death(player, i);
 			}
 		}
 	}
@@ -83,14 +80,19 @@ export default class Game {
 					other.canEatCell(player)
 				) {
 					this.deadQueue.push(player);
-					player.deathTimeStamp = new Date().getTime();
-					player.score -= Game.defaultPlayerSize;
-					this.insertInTopTen(player);
-					this.players.splice(i, 1);
+					this.death(player, i);
 					break;
 				}
 			}
 		}
+	}
+
+	death(player: PlayerCell, idx: number) {
+		player.deathTimeStamp = new Date().getTime();
+		player.score -= Game.defaultPlayerSize;
+		player.calculFinalScore();
+		this.insertInTopTen(player);
+		this.players.splice(idx, 1);
 	}
 
 	setDirection(socketId: string, x: number, y: number): void {
@@ -99,10 +101,10 @@ export default class Game {
 	}
 
 	insertInTopTen(player: PlayerCell): void {
-		if (this.topTen.length < 9 || player.score > this.topTen[0].score) {
+		if (this.topTen.length < 9 || player.finalScore > this.topTen[0].score) {
 			this.topTen.push({
 				name: player.name,
-				score: player.score,
+				score: player.finalScore,
 				date: new Date().getTime(),
 			});
 			this.topTen.sort((a, b) => {

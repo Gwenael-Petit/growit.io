@@ -14,7 +14,6 @@ export type UpdateGameMessage = {
 	foods: FoodCellMessage[];
 };
 export type PlayerCellMessage = {
-	finalScore: number;
 	socketId: string;
 	pos: Vec2D;
 	radius: number;
