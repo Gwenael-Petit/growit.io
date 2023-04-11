@@ -7,34 +7,22 @@ import {
 	FoodCellMessage,
 	PlayerCellMessage,
 } from '../../common/socketMessages';
+import MainView from './MainView';
 
-const mainMenu = document.querySelector('.menu') as HTMLDivElement;
-const playButton = document.querySelector('.play') as HTMLButtonElement;
-const leaderBoard = document.querySelector('.leaderBoard') as HTMLDivElement;
-const scoreBubble = document.querySelector('.score-bubble') as HTMLDivElement;
-const loginForm = document.querySelector('.loginForm') as HTMLFormElement;
-const nameInput = loginForm.querySelector(
-	'input[type=text]'
-) as HTMLInputElement;
+//const creditsLink = document.querySelector('.creditsLink') as HTMLAnchorElement;
+
 const endGameMenu = document.querySelector('.endGame') as HTMLDivElement;
 const playAgain = document.querySelector('.playAgain') as HTMLAnchorElement;
-const scoreLink = document.querySelector('.scoreLink') as HTMLAnchorElement;
+
 const scoreTable = document.querySelector('.scoreTable') as HTMLDivElement;
 const backToMenuScore = document.querySelector('.menu1') as HTMLAnchorElement;
 const backToMenuEndGame = document.querySelector('.menu2') as HTMLAnchorElement;
 const backToMenuCredits = document.querySelector('.menu3') as HTMLAnchorElement;
-const creditsLink = document.querySelector('.creditsLink') as HTMLAnchorElement;
+
 const credits = document.querySelector('.credits') as HTMLDivElement;
-const colorPicker = document.querySelectorAll(
-	'.color-picker'
-) as NodeListOf<HTMLSpanElement>;
 
-const interpolationZoomStep = 0.1;
-
-const socket: Socket<ServerToClientsEvents, ClientToServerEvents> = io();
-
-const canvas = document.querySelector('.gameCanvas') as HTMLCanvasElement,
-	context = canvas.getContext('2d') as CanvasRenderingContext2D;
+const leaderBoard = document.querySelector('.leaderBoard') as HTMLDivElement;
+const scoreBubble = document.querySelector('.score-bubble') as HTMLDivElement;
 
 let canvasWidth: number,
 	canvasHeight: number,
@@ -42,6 +30,11 @@ let canvasWidth: number,
 	mouseY: number = 0,
 	mapWidth: number,
 	mapHeight: number;
+
+const socket: Socket<ServerToClientsEvents, ClientToServerEvents> = io();
+
+const canvas = document.querySelector('.gameCanvas') as HTMLCanvasElement,
+	context = canvas.getContext('2d') as CanvasRenderingContext2D;
 
 const canvasResizeObserver = new ResizeObserver(() => resampleCanvas());
 canvasResizeObserver.observe(canvas);
@@ -58,7 +51,6 @@ resampleCanvas();
 let inGame: boolean = false;
 
 let player: PlayerCellMessage | undefined,
-	actualZoom: number = 0,
 	players: PlayerCellMessage[] = [],
 	foods: FoodCellMessage[] = [];
 
@@ -112,7 +104,7 @@ function render(): void {
 	context.save();
 	context.translate(canvasWidth / 2, canvasHeight / 2);
 	if (player != undefined) {
-		context.scale(actualZoom, actualZoom);
+		context.scale(player.zoom, player.zoom);
 		context.translate(-player.pos.x, -player.pos.y);
 	} else {
 		context.scale(10, 10);
@@ -123,6 +115,10 @@ function render(): void {
 	context.restore();
 	requestAnimationFrame(render);
 }
+
+render();
+
+// SocketIo
 
 socket.on('allowConnection', mapSize => {
 	mapWidth = mapSize.width / 2;
@@ -135,9 +131,9 @@ socket.on('joined', () => {
 
 socket.on('dead', ({ score, joinTimeStamp, deathTimeStamp, finalScore }) => {
 	inGame = false;
-	endGameMenu.classList.remove('hideMenu');
-	leaderBoard.classList.add('hideDisplays');
-	scoreBubble.classList.add('hideDisplays');
+	endGameMenu.classList.remove('hidden');
+	leaderBoard.classList.add('hidden');
+	scoreBubble.classList.add('hidden');
 	endGameData(score, new Date(deathTimeStamp - joinTimeStamp), finalScore);
 });
 
@@ -152,6 +148,10 @@ socket.on('updateGame', game => {
 		refreshLeaderBoard(player);
 	}
 });
+
+const mainView = new MainView(
+	document.querySelector('.menu') as HTMLDivElement
+);
 
 const topTenTBody = scoreTable.querySelector(
 	'tbody'
@@ -169,58 +169,56 @@ socket.on('topTen', topTen => {
 	topTenTBody.innerHTML = html;
 });
 
-render();
-
-playButton.addEventListener('click', event => {
+mainView.loginForm.addEventListener('submit', event => {
 	event.preventDefault();
-	mainMenu.classList.add('hideMenu');
+	mainView.hide();
 	play();
 });
 
 playAgain.addEventListener('click', event => {
 	event.preventDefault();
-	endGameMenu.classList.add('hideMenu');
+	endGameMenu.classList.add('hidden');
 	play();
 });
 
 function play(): void {
-	leaderBoard.classList.remove('hideDisplays');
-	scoreBubble.classList.remove('hideDisplays');
+	leaderBoard.classList.remove('hidden');
+	scoreBubble.classList.remove('hidden');
 	socket.emit('join', {
-		name: nameInput.value == '' ? 'Grolem' : nameInput.value,
-		color: selectedColor,
+		name: mainView.nameInput.value == '' ? 'Grolem' : mainView.nameInput.value,
+		color: mainView.selectedColor,
 	});
 }
 
-scoreLink.addEventListener('click', event => {
+mainView.scoreLink.addEventListener('click', event => {
 	event.preventDefault();
-	scoreTable.classList.remove('hideMenu');
-	mainMenu.classList.add('hideMenu');
+	scoreTable.classList.remove('hidden');
+	mainView.hide();
 	socket.emit('getTopTen');
 });
 
+/*creditsLink.addEventListener('click', event => {
+	event.preventDefault();
+	credits.classList.remove('hidden');
+	mainView.hide();
+});*/
+
 backToMenuScore.addEventListener('click', event => {
 	event.preventDefault();
-	mainMenu.classList.remove('hideMenu');
-	scoreTable.classList.add('hideMenu');
+	mainView.show();
+	scoreTable.classList.add('hidden');
 });
 
 backToMenuEndGame.addEventListener('click', event => {
 	event.preventDefault();
-	mainMenu.classList.remove('hideMenu');
-	endGameMenu.classList.add('hideMenu');
-});
-
-creditsLink.addEventListener('click', event => {
-	event.preventDefault();
-	credits.classList.remove('hideMenu');
-	mainMenu.classList.add('hideMenu');
+	mainView.show();
+	endGameMenu.classList.add('hidden');
 });
 
 backToMenuCredits.addEventListener('click', event => {
 	event.preventDefault();
-	mainMenu.classList.remove('hideMenu');
-	credits.classList.add('hideMenu');
+	mainView.show();
+	credits.classList.add('hidden');
 });
 
 canvas.addEventListener('mousemove', event => {
@@ -228,17 +226,6 @@ canvas.addEventListener('mousemove', event => {
 		mouseX = event.clientX - canvasWidth / 2;
 		mouseY = event.clientY - canvasHeight / 2;
 	}
-});
-
-let selectedColor: string = 'red';
-colorPicker.forEach(c => {
-	c.style.backgroundColor = c.getAttribute('color') || 'red';
-	c.addEventListener('click', event => {
-		event.preventDefault();
-		colorPicker.forEach(element => element.classList.remove('color-selected'));
-		c.classList.add('color-selected');
-		selectedColor = c.getAttribute('color') || 'red';
-	});
 });
 
 setInterval(() => {
@@ -250,17 +237,6 @@ setInterval(() => {
 		});
 	}
 }, 1000 / 30);
-
-setInterval(() => {
-	if (inGame && player != undefined) {
-		/*actualZoom =
-			Math.round(
-				interpolate(actualZoom, player.zoom, interpolationZoomStep) * 100
-			) / 100;
-		console.log(actualZoom);*/
-		actualZoom = player.zoom;
-	}
-}, 1000 / 60);
 
 const bodyBoard = document.querySelector(
 	'.bodyBoard'
@@ -298,10 +274,3 @@ function endGameData(score: number, timeAlive: Date, finalScore: number): void {
 	eatenFood.innerHTML = `${score}`;
 	pointsGained.innerHTML = `${finalScore}`;
 }
-
-/*function interpolate(actual, goal, t) {
-	const diff = Math.round((goal - actual) * 100) / 100;
-	if (diff == 0) return goal;
-	if (diff > 0) return actual + t > goal ? actual + diff : actual + t;
-	return actual - t < goal ? actual - diff : actual - t;
-}*/

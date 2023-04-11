@@ -290,11 +290,7 @@ td{
     color: red;
 }
 
-.hideDisplays{
-    display: none;
-}
-
-.hideMenu{
+.hidden{
     display: none;
 }
 
