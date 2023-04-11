@@ -282,6 +282,10 @@ select {
 
 }
 
+td{
+    padding:0 35px;
+}
+
 .me{
     color: red;
 }
