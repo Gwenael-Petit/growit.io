@@ -1,6 +1,7 @@
 import Game from './Game';
 import fs from 'fs';
 import Vec2D from '../../common/Vec2D';
+import PlayerCell from './PlayerCell';
 
 let game: Game;
 
@@ -54,6 +55,42 @@ describe('When receive', () => {
 	});
 });
 
-describe('When update the game', () => {});
+describe('top ten players', () => {
+	it('should insert player in top ten', () => {
+		const p = new PlayerCell(3, 4, 'red', 10000, 'test', 'PlayerName');
+		p.calculFinalScore();
+		game.insertInTopTen(p);
+		expect(game.topTen[1].name).toEqual(p.name);
+		expect(game.topTen[1].score).toEqual(p.finalScore);
+	});
+	it('should save on the file', () => {
+		game.topTen.push({
+			name: 'test',
+			score: 100,
+			date: new Date(Date.now()).getTime(),
+		});
+		game.saveTopTenFile();
+		expect(JSON.parse(fs.readFileSync(game.topTenFile).toString())).toEqual(
+			game.topTen
+		);
+	});
+});
 
-describe('top ten players', () => {});
+describe('When update the game', () => {
+	it('should kill the dead players', () => {
+		game.join('socket1', 'Player1', 'red');
+		game.join('socket2', 'Player2', 'red');
+		let p2 = game.players[1];
+		game.players[0].radius = 20;
+		game.players[0].pos = game.players[1].pos;
+		game.players[1].vulnerable = true;
+		game.update();
+		expect(game.deadQueue[0]).toEqual(p2);
+	});
+
+	it('should remove p1 from palyers', () => {
+		game.join('socket1', 'Player1', 'red');
+		game.death(game.players[0], 0);
+		expect(game.players[0]).toBeUndefined();
+	});
+});
